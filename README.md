@@ -174,7 +174,7 @@ Not quite a complete cookbook, but close:
 
 ```
 # Install needed software with apt and PIP
-apt-get install git p7zip-full python-pip postgresql-server-dev-all python-dev libevent-dev gdal-bin postgis postgresql-client postgresql pgdbf
+apt-get install git p7zip-full python-pip postgresql-server-dev-all python-dev libevent-dev gdal-bin postgis postgresql-client postgresql pgdbf nginx
 pip install psycopg2 gunicorn tilestache requests grequests shapely --allow-external PIL --allow-unverified PIL
 
 # Postgres needs to be set up with appropriate user login.
