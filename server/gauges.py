@@ -11,20 +11,23 @@ conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password
 #def index():
 #  return send_from_directory('.', 'index.html')
 
-@app.route('/list/<float:xmin>/<float:ymin>/<float:xmax>/<float:ymax>', methods=['GET'])
-def gaugelist(xmin,ymin,xmax,ymax):
+@app.route('/gauges/list/<string:xmin>/<string:ymin>/<string:xmax>/<string:ymax>', methods=['GET'])
+def show_gaugelist(xmin,ymin,xmax,ymax):
+  print('hi')
   cur = conn.cursor()
 
   cur.execute("""
     SELECT *
-    FROM   my_table
-    WHERE  coordinates
+    FROM   gageloc
+    WHERE  geom
         @ -- contained by, gets fewer rows -- ONE YOU NEED!
         ST_MakeEnvelope (
-            %(xmin)f, %(ymin)f, -- bounding
-            %(xmax)f, %(ymax)f, -- box limits
+            %(xmin)s, %(ymin)s, -- bounding
+            %(xmax)s, %(ymax)s, -- box limits
             900913)
   """, {"xmin":xmin,"ymin":ymin,"xmax":xmax,"ymax":ymax})
+
+  print(cur.fetchall())
 
   return Response("hi", mimetype='text')
   #return Response(outcss, mimetype='text/css')
