@@ -81,7 +81,7 @@ stateLayer.setStyle({ "color": "#444",
                       "opacity": 1.0 });
 stateLayer.addTo(map);
 
-L.tileLayer('/nlcd/{z}/{x}/{y}.png').addTo(map);
+L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true}).addTo(map);
 
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
