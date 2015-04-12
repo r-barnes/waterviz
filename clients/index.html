@@ -123,7 +123,7 @@ function getData() {
     for (var i = 0; i < data.length; i++) {
       var marker = data[i];
       var markerItem = L.circleMarker(
-        [marker.lat,marker.lng], 
+        [marker.lat,marker.lng],
 	{
 	    radius: 5,
 	    color:     'black',
@@ -147,6 +147,18 @@ function getData() {
     //$('#spinnerBox').fadeOut();
   });
 }
+
+var counties = new L.geoJson();
+counties.addTo(map);
+$.getJSON({
+  dataType: "json",
+  url:      "counties.json",
+  success:  function(data) {
+    $(data.features).each(function(key, data) {
+        counties.addData(data);
+    });
+}
+}).error(function() {});
 
 
 </script>
