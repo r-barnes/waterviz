@@ -86,8 +86,10 @@ L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true}).addTo(map);
 
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
-  console.log('hi',feature.properties.huc8);
+  $.getJSON('/gauges/reachflow/'+feature.properties.huc8, function(data){
+    console.log(data);
     return "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;";
+  });
 }
 
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
