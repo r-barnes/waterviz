@@ -93,6 +93,7 @@ function riverStyle(feature) {
       ret += "fillColor:"+((data.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*data.drank)]:'gray')+";";
     else
       ret += "#29439c;"
+    console.log(ret);
     return ret;
   });
 }
