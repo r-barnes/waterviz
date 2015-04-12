@@ -122,6 +122,7 @@ var requestsPool = {
 function StyleTheRivers(feature){
   requestsPool.fetch('/gauges/reachflow/'+feature.properties.huc8)
   .done(function(val){
+    $('.h'+feature.properties.huc8).css('stroke', (val.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*val.drank)]:'gray' );
     console.log(val);
   });
 }
@@ -134,7 +135,7 @@ function riverStyle(feature) {
 
 function riverClass(feature){
   StyleTheRivers(feature);
-  return "river " + feature.properties.huc8;
+  return "river h" + feature.properties.huc8;
 }
 
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
