@@ -96,7 +96,7 @@ def getData(state):
   return ret
 
 cur = conn.cursor() #cursor_factory = psycopg2.extras.RealDictCursor)
-for state in states[0:2]:
+for state in states:
   data = getAllData(state['abbrev'])
   print("Found %d records for %s." % (len(data),state['abbrev']))
 
