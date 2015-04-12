@@ -84,6 +84,8 @@ function riverStyle(feature) {
              "opacity": 1.0, };
 }
 
+L.tileLayer('/nlcd/{z}/{x}/{y}.png').addTo(map);
+
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
 var geojsonURL = "/rivers/{z}/{x}/{y}.json";
 var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, { },
