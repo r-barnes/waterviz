@@ -129,10 +129,14 @@ function getStations() {
       	{
     	    radius:      5,
     	    color:       'black',
-    	    fillColor:   grad_colours[int(grad_colours.length*marker.drank)],
-    	    fillOpacity: 0.5
+            fillColor:   (marker.drank!==null)?grad_colours[grad_colours.length*marker.drank]:'gray',
+    	    fillOpacity: 1
       	}
       );
+      markerItem.on('mouseover', function(){
+        console.log(marker);
+      });
+      console.log(marker.drank);
 
       // markerItem.bindPopup(
       //   '<h4>' + marker.complaint_type + '</h4>'
