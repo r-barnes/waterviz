@@ -41,7 +41,9 @@ L.TileLayer.d3_geoJSON =  L.TileLayer.extend({
                     .attr("class", self.options.class)
                     .attr("style", self.options.style)
                     .attr("data-huc8", function(x){return x.properties.huc8;})
-                    .attr("data-name", function(x){return x.properties.name;});
+                    .attr("data-name", function(x){return x.properties.name;})
+                    .on("mouseover", function(x) { console.log(x.properties.name);d3.select(d3.event.target).classed("river", false).classed("highlightriver", true); })
+                    .on("mouseout",  function(x) { d3.select(d3.event.target).classed("river", true).classed("highlightriver", false); });
             });
         }
     }
