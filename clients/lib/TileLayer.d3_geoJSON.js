@@ -40,6 +40,8 @@ L.TileLayer.d3_geoJSON =  L.TileLayer.extend({
                     .attr("d", self._path)
                     .attr("class", self.options.class)
                     .attr("style", self.options.style);
+                    .attr("data-huc8", function(x){return x.properties.huc8;})
+                    .attr("data-name", function(x){return x.properties.name;});
             });
         }
     }
