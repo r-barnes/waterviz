@@ -65,7 +65,7 @@ if (!window.location.hash) {
 }
 
 // Make the base map; a raster tile relief map from ESRI
-var esriRelief = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}'
+var esriRelief = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}';
 
 var basemap = L.tileLayer(esriRelief, {
         attribution: '<a href="http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2">ESRI shaded relief</a>, <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php">NHDPlus v2</a>',
@@ -99,8 +99,8 @@ function riverClass(feature){
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
 var geojsonURL = "/rivers/{z}/{x}/{y}.json";
 var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
-  class: riverClass
-  style: riverStyle,
+  class: riverClass,
+  style: riverStyle
 });
 map.addLayer(riverLayer);
 
