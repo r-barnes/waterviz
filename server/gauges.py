@@ -17,7 +17,7 @@ def show_gaugelist(xmin,ymin,xmax,ymax):
   cur = conn.cursor()
 
   cur.execute("""
-    SELECT *
+    SELECT *, ST_X(the_geom) as lng, ST_Y(the_geom) as lat
     FROM   gageloc
     WHERE  geom
         @ -- contained by, gets fewer rows -- ONE YOU NEED!
