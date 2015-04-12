@@ -20,18 +20,18 @@ def show_gaugelist(xmin,ymin,xmax,ymax):
 
   cur.execute("""
 SELECT site_code,
-       lng,
-       lat,
-       to_char(sdt, 'YYYY-MM-DD HH24:MI') as sdt,
-       svalue,
-       to_char(sdt, 'YYYY-MM-DD HH24:MI') as ddt,
-       dvalue,
-       (SELECT percent_rank(dvalue) WITHIN GROUP (ORDER BY ave ASC) as drank,
-       (SELECT station_nm FROM gageinfo WHERE gageid=site_code LIMIT 1) as name
-              FROM gage_smooth
-              WHERE month=13 and year>=1985 and site_no=site_code
-              GROUP BY site_no
-          )
+      lng,
+      lat,
+      to_char(sdt, 'YYYY-MM-DD HH24:MI') as sdt,
+      svalue,
+      to_char(sdt, 'YYYY-MM-DD HH24:MI') as ddt,
+      dvalue,
+      (SELECT percent_rank(dvalue) WITHIN GROUP (ORDER BY ave ASC) as drank
+         FROM gage_smooth
+         WHERE month=13 and year>=1985 and site_no=site_code
+         GROUP BY site_no
+      ),
+      (SELECT station_nm FROM gageinfo WHERE gageid=site_code LIMIT 1) as name
 FROM (SELECT source_fea AS site_code, ST_X(geom) as lng, ST_Y(geom) as lat
         FROM   gageloc
         WHERE  geom
