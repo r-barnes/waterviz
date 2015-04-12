@@ -84,24 +84,22 @@ stateLayer.addTo(map);
 
 L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true}).addTo(map);
 
+
+//$.getJSON('/gauges/reachflow/'+feature.properties.huc8, function(data){
+
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
-  $.getJSON('/gauges/reachflow/'+feature.properties.huc8, function(data){
-    console.log(data);
-    var ret = "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;";
-    if(data.drank)
-      ret += "stroke:"+((data.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*data.drank)]:'gray')+";";
-    else
-      ret += "stroke:#29439c;"
-    console.log(ret);
-    return ret;
-  });
+  return "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;stroke:#29439c;";
+}
+
+function riverClass(feature){
+  return "river " + feature.properties.huc8;
 }
 
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
 var geojsonURL = "/rivers/{z}/{x}/{y}.json";
 var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
-  class: "river",
+  class: riverClass
   style: riverStyle,
 });
 map.addLayer(riverLayer);
