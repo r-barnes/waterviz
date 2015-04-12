@@ -111,7 +111,6 @@ function getData() {
 
   // Get map bounds from Leaflet.  getBounds() returns an object
   var bbox = map.getBounds();
-  console.log(bbox);
 
   var addy = "/gauges/list/xmin/ymin/xmax/ymax";
   addy     = addy.replace("xmin",bbox._southWest.lng);
