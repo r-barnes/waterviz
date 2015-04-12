@@ -120,7 +120,6 @@ function getData() {
 
   //use jQuery's getJSON() to call the SODA API for NYC 311
   $.getJSON(addy, function(data) {
-    console.log(data);
     //iterate over each 311 complaint, add a marker to the map
     for (var i = 0; i < data.length; i++) {
 
