@@ -25,7 +25,7 @@ def show_gaugelist(xmin,ymin,xmax,ymax):
         ST_MakeEnvelope (
             %(xmin)s, %(ymin)s, -- bounding
             %(xmax)s, %(ymax)s, -- box limits
-            900913)
+            900913) order by random() LIMIT 500
   """, {"xmin":xmin,"ymin":ymin,"xmax":xmax,"ymax":ymax})
 
   return json.dumps(cur.fetchall())
