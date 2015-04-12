@@ -129,11 +129,11 @@ function getStations() {
         {
           radius:      5,
           color:       'black',
-          fillColor:   (marker.drank!==null)?grad_colours[math.floor((grad_colours.length-1)*marker.drank)]:'gray',
+          fillColor:   (marker.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*marker.drank)]:'gray',
           fillOpacity: 1
         }
       );
-      console.log((grad_colours.length-1)*marker.drank,(marker.drank!==null)?grad_colours[math.floor((grad_colours.length-1)*marker.drank)]:'gray');
+      console.log(Math.floor((grad_colours.length-1)*marker.drank),(marker.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*marker.drank)]:'gray');
       markerItem.on('mouseover', function(){
         console.log(marker);
       });
