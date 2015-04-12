@@ -31,7 +31,7 @@ body {
     border-radius: 5px;
 }
 
-path.river { stroke: #29439c;stroke-linejoin:round;stroke-linecap:round;fill:none; }
+path.river          { stroke: #29439c;stroke-linejoin:round;stroke-linecap:round;fill:none; }
 path.highlightriver {stroke: red;stroke-linejoin:round;stroke-linecap:round;fill:none;}
 </style>
 
@@ -86,6 +86,7 @@ L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true}).addTo(map);
 
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
+  console.log('hi',feature.properties.huc8);
     return "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;";
 }
 
