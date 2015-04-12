@@ -87,9 +87,11 @@ L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true}).addTo(map);
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
   $.getJSON('/gauges/reachflow/'+feature.properties.huc8, function(data){
-    //console.log(data);
-    return "stroke-width: " + 10*data.drank * map.getZoom()/13 + "px;";
-    //return "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;";
+    console.log(data);
+    if(data.drank)
+      return "stroke-width: " + 10*data.drank * map.getZoom()/13 + "px;";
+    else
+      return "stroke-width: 2px;";
   });
 }
 
