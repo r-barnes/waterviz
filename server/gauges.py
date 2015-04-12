@@ -11,7 +11,7 @@ conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password
 #def index():
 #  return send_from_directory('.', 'index.html')
 
-@app.route('/gaugelist/<float:xmin>/<float:ymin>/<float:xmax>/<float:ymax>', methods=['GET'])
+@app.route('/list/<float:xmin>/<float:ymin>/<float:xmax>/<float:ymax>', methods=['GET'])
 def gaugelist(xmin,ymin,xmax,ymax):
   cur = conn.cursor()
 
