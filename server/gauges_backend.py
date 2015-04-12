@@ -99,7 +99,6 @@ cur = conn.cursor() #cursor_factory = psycopg2.extras.RealDictCursor)
 for state in states[0:2]:
   data = getAllData(state['abbrev'])
   print("Found %d records for %s." % (len(data),state['abbrev']))
-  print data[0:10]
 
   cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
   #cur.execute("CREATE TABLE tmp AS SELECT * FROM gauge_data with no data")
