@@ -3,6 +3,7 @@ import os
 from flask import Flask, jsonify, send_from_directory, abort, Response, request
 import psycopg2
 import psycopg2.extras
+import json
 
 app = Flask(__name__)
 
@@ -14,10 +15,10 @@ conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password
 
 @app.route('/gauges/list/<string:xmin>/<string:ymin>/<string:xmax>/<string:ymax>', methods=['GET'])
 def show_gaugelist(xmin,ymin,xmax,ymax):
-  cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+  cur = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
 
   cur.execute("""
-    SELECT *, ST_X(geom) as lng, ST_Y(geom) as lat
+    SELECT  ST_X(geom) as lng, ST_Y(geom) as lat
     FROM   gageloc
     WHERE  geom
         @ -- contained by, gets fewer rows -- ONE YOU NEED!
@@ -27,7 +28,7 @@ def show_gaugelist(xmin,ymin,xmax,ymax):
             900913)
   """, {"xmin":xmin,"ymin":ymin,"xmax":xmax,"ymax":ymax})
 
-  return jsonify(cur.fetchall())
+  return json.dumps(cur.fetchall())
 
 if __name__ == '__main__':
     app.run(debug=True)
