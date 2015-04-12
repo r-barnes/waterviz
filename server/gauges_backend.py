@@ -102,6 +102,7 @@ for state in states[0:2]:
   print data[0:10]
 
   cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
+  #cur.execute("CREATE TABLE tmp AS SELECT * FROM gauge_data with no data")
   cur.executemany("""INSERT INTO tmp(site_code,variable,dt,value) VALUES (%s, %s, %s, %s)""", data)
 
   cur.execute("""
@@ -109,7 +110,7 @@ for state in states[0:2]:
   SELECT * FROM tmp
   WHERE (site_code,variable,dt) NOT IN (
       SELECT site_code,variable,dt
-      FROM tmp
+      FROM gauge_data
   );
   """)
 
