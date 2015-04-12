@@ -73,8 +73,6 @@ def getAllData():
     if resp.status_code!=200:
       pass
     resp = resp.json()
-    #s             = resp['value']['timeSeries'][0]
-    print "Station,Variable,Timestamp,Value"
     for s in resp['value']['timeSeries']:
       if len(s['variable']['variableCode'])>1:
         print "More variables!"
@@ -93,7 +91,7 @@ def getAllData():
 data = getAllData()
 
 cur = conn.cursor() #cursor_factory = psycopg2.extras.RealDictCursor)
-cur.execute("create table tmp AS select * from gauge_data where 1=0")
+cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
 cur.executemany("""INSERT INTO tmp(site_code,variable,dt,value) VALUES (%s, %s, %s, %s)""", data)
 
 cur.execute("""
@@ -105,4 +103,7 @@ WHERE (site_code,variable,dt) NOT IN (
 );
 """)
 
-cur.execute("drop table tmp")
+for notice in conn.notices:
+    print notice
+
+conn.commit()
