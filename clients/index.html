@@ -124,7 +124,6 @@ function getStations() {
   $.getJSON(addy, function(data) {
     //iterate over each 311 complaint, add a marker to the map
     _.each(data, function(marker){
-      var marker     = data[i];
       var markerItem = L.circleMarker(
         [marker.lat,marker.lng],
         {
