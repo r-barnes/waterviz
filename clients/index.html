@@ -133,11 +133,9 @@ function getStations() {
           fillOpacity: 1
         }
       );
-      console.log(Math.floor((grad_colours.length-1)*marker.drank),(marker.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*marker.drank)]:'gray');
       markerItem.on('mouseover', function(){
         console.log(marker);
       });
-      console.log(marker.drank);
 
       // markerItem.bindPopup(
       //   '<h4>' + marker.complaint_type + '</h4>'
