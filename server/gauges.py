@@ -17,8 +17,9 @@ conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password
 def show_gaugelist(xmin,ymin,xmax,ymax):
   cur = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
 
+
   cur.execute("""
-SELECT *, (SELECT percent_rank(value) WITHIN GROUP (ORDER BY ave ASC) as rank
+SELECT site_code, lng, lat, variable, to_char(dt, 'YYYY-MM-DD HH24:MI') as dt, value, rank, (SELECT percent_rank(value) WITHIN GROUP (ORDER BY ave ASC) as rank
               FROM gage_smooth
               WHERE month=13 and year>=1985 and site_no=site_code
               GROUP BY site_no
