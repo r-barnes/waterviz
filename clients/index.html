@@ -13,6 +13,7 @@
 <script src="lib/leaflet-hash.js"></script>
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <script src="lib/TileLayer.d3_geoJSON.js"></script>
 <script type="text/javascript" src="us-states.js"></script>
 
@@ -122,16 +123,16 @@ function getStations() {
   //use jQuery's getJSON() to call the SODA API for NYC 311
   $.getJSON(addy, function(data) {
     //iterate over each 311 complaint, add a marker to the map
-    for (var i = 0; i < data.length; i++) {
+    _.each(data, function(marker){
       var marker     = data[i];
       var markerItem = L.circleMarker(
         [marker.lat,marker.lng],
-      	{
-    	    radius:      5,
-    	    color:       'black',
+        {
+          radius:      5,
+          color:       'black',
             fillColor:   (marker.drank!==null)?grad_colours[grad_colours.length*marker.drank]:'gray',
-    	    fillOpacity: 1
-      	}
+          fillOpacity: 1
+        }
       );
       markerItem.on('mouseover', function(){
         console.log(marker);
@@ -145,12 +146,8 @@ function getStations() {
       // );
 
       markers.addLayer(markerItem);
-    }
-    //.addTo(map);
+    });
     map.addLayer(markers);
-
-    //fade out the loading spinner
-    //$('#spinnerBox').fadeOut();
   });
 }
 
