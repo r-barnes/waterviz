@@ -96,5 +96,61 @@ var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
 });
 map.addLayer(riverLayer);
 
+
+map.on('dragend', function(e) {
+  //$('#spinnerBox').fadeIn();
+  getData();
+});
+
+var markers = new L.FeatureGroup();
+
+function getData() {
+  // Clear markers before getting new ones
+  markers.clearLayers();
+
+  // Get map bounds from Leaflet.  getBounds() returns an object
+  var bbox = map.getBounds();
+  console.log(bbox);
+
+  var addy = "/gauges/list/xmin/ymin/xmax/ymax";
+  addy     = addy.replace("xmin",bbox._southWest.lng);
+  addy     = addy.replace("ymin",bbox._southWest.lat);
+  addy     = addy.replace("xmax",bbox._northEast.lng);
+  addy     = addy.replace("ymax",bbox._northEast.lat);
+
+  //use jQuery's getJSON() to call the SODA API for NYC 311
+  $.getJSON(addy, function(data) {
+    console.log(data);
+    //iterate over each 311 complaint, add a marker to the map
+   /* for (var i = 0; i < data.length; i++) {
+
+      var marker = data[i];
+      var markerItem = L.circleMarker(
+        [marker.location.latitude,marker.location.longitude], {
+          radius: 5,
+          fillColor: "steelblue",
+          color: "#000",
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8,
+        });
+
+      markerItem.bindPopup(
+        '<h4>' + marker.complaint_type + '</h4>'
+        + (new Date(marker.created_date)).toDateString()
+        + ((marker.incident_address != null) ? '<br/>' + marker.incident_address : '')
+      );
+
+      markers.addLayer(markerItem);
+    }
+    //.addTo(map);
+    map.addLayer(markers);
+
+    //fade out the loading spinner
+    $('#spinnerBox').fadeOut();*/
+  });
+}
+
+
 </script>
 </body></html>
