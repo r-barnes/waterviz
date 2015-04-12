@@ -17,7 +17,7 @@ def show_gaugelist(xmin,ymin,xmax,ymax):
   cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
 
   cur.execute("""
-    SELECT *, ST_X(the_geom) as lng, ST_Y(the_geom) as lat
+    SELECT *, ST_X(geom) as lng, ST_Y(geom) as lat
     FROM   gageloc
     WHERE  geom
         @ -- contained by, gets fewer rows -- ONE YOU NEED!
