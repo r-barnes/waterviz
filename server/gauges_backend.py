@@ -66,54 +66,54 @@ states = [
 do_these_states = ["AL","AZ","AR","CA","CO","CT","DE","FL","GA","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"]
 states          = filter(lambda x: x['abbrev'] in do_these_states,states)
 
-def getAllData():
+def getData(state):
   ret = []
   translate_variable_code = {'00065':'S', '00060':'D'} #Stage and discharge\
-  for state in states:
-    print("Gathering data for %s" % (state['abbrev']))
-    url     = "http://waterservices.usgs.gov/nwis/iv/"
-    options = {"format":"json","stateCd":state['abbrev'],"parameterCd":"00060,00065","siteStatus":"active"}
-    resp    = requests.get(url,params=options)
-    if resp.status_code!=200:
+  print("Gathering data for %s" % (state))
+  url     = "http://waterservices.usgs.gov/nwis/iv/"
+  options = {"format":"json","stateCd":state,"parameterCd":"00060,00065","siteStatus":"active"}
+  resp    = requests.get(url,params=options)
+  if resp.status_code!=200:
+    pass
+  resp = resp.json()
+  for s in resp['value']['timeSeries']:
+    if len(s['variable']['variableCode'])>1:
+      print "More variables!"
+    if len(s['values'][0]['value'])>1:
+      print "More values!"
+    if len(s['sourceInfo']['siteCode'])>1:
+      print "More sites!"
+    try:
+      site_code     = s['sourceInfo']['siteCode'][0]['value']
+      variable_code = s['variable']['variableCode'][0]['value']
+      variable_code = translate_variable_code[variable_code]
+      timestamp     = s['values'][0]['value'][0]['dateTime']
+      value         = float(s['values'][0]['value'][0]['value'])
+      ret.append( (site_code,variable_code,timestamp,value) )
+    except:
       pass
-    resp = resp.json()
-    for s in resp['value']['timeSeries']:
-      if len(s['variable']['variableCode'])>1:
-        print "More variables!"
-      if len(s['values'][0]['value'])>1:
-        print "More values!"
-      if len(s['sourceInfo']['siteCode'])>1:
-        print "More sites!"
-      try:
-        site_code     = s['sourceInfo']['siteCode'][0]['value']
-        variable_code = s['variable']['variableCode'][0]['value']
-        variable_code = translate_variable_code[variable_code]
-        timestamp     = s['values'][0]['value'][0]['dateTime']
-        value         = float(s['values'][0]['value'][0]['value'])
-        ret.append( (site_code,variable_code,timestamp,value) )
-      except:
-        pass
 
   return ret
 
-data = getAllData()
+for state in states:
+  data = getAllData(state['abbrev'])
+  print("Found %d records for %s." % (len(data),state))
 
-print("Found %d records." % (len(data)))
+  cur = conn.cursor() #cursor_factory = psycopg2.extras.RealDictCursor)
+  cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
+  cur.executemany("""INSERT INTO tmp(site_code,variable,dt,value) VALUES (%s, %s, %s, %s)""", data)
 
-cur = conn.cursor() #cursor_factory = psycopg2.extras.RealDictCursor)
-cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
-cur.executemany("""INSERT INTO tmp(site_code,variable,dt,value) VALUES (%s, %s, %s, %s)""", data)
+  cur.execute("""
+  INSERT INTO gauge_data
+  SELECT * FROM tmp
+  WHERE (site_code,variable,dt) NOT IN (
+      SELECT site_code,variable,dt
+      FROM tmp
+  );
+  """)
 
-cur.execute("""
-INSERT INTO gauge_data
-SELECT * FROM tmp
-WHERE (site_code,variable,dt) NOT IN (
-    SELECT site_code,variable,dt
-    FROM tmp
-);
-""")
+  conn.commit()
 
-for notice in conn.notices:
+  for notice in conn.notices:
     print notice
 
-conn.commit()
