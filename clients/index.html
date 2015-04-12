@@ -122,11 +122,11 @@ function getData() {
   $.getJSON(addy, function(data) {
     console.log(data);
     //iterate over each 311 complaint, add a marker to the map
-   /* for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < data.length; i++) {
 
       var marker = data[i];
       var markerItem = L.circleMarker(
-        [marker.location.latitude,marker.location.longitude], {
+        [marker.lat,marker.lng], {
           radius: 5,
           fillColor: "steelblue",
           color: "#000",
@@ -135,11 +135,11 @@ function getData() {
           fillOpacity: 0.8,
         });
 
-      markerItem.bindPopup(
-        '<h4>' + marker.complaint_type + '</h4>'
-        + (new Date(marker.created_date)).toDateString()
-        + ((marker.incident_address != null) ? '<br/>' + marker.incident_address : '')
-      );
+      // markerItem.bindPopup(
+      //   '<h4>' + marker.complaint_type + '</h4>'
+      //   + (new Date(marker.created_date)).toDateString()
+      //   + ((marker.incident_address != null) ? '<br/>' + marker.incident_address : '')
+      // );
 
       markers.addLayer(markerItem);
     }
@@ -147,7 +147,7 @@ function getData() {
     map.addLayer(markers);
 
     //fade out the loading spinner
-    $('#spinnerBox').fadeOut();*/
+    //$('#spinnerBox').fadeOut();
   });
 }
 
