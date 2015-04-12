@@ -13,6 +13,20 @@ conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password
 #def index():
 #  return send_from_directory('.', 'index.html')
 
+@app.route('/gauges/reachflow/<string:huc8>', methods=['GET'])
+def show_reachflow(huc8):
+  cur = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
+
+  cur.execute("""
+SELECT avg(dvalue) as dvalue, avg(svalue) as svalue FROM (SELECT a.site_code,a.dt as ddt, a.value as dvalue FROM gauge_data AS a JOIN (SELECT site_code, variable, max(dt) maxDate FROM gauge_data GROUP BY site_code,variable) b ON a.site_code = b.site_code AND a.variable='D' AND a.variable=b.variable AND a.dt = b.maxDate) as d
+NATURAL JOIN (SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data AS a JOIN (SELECT site_code, variable, max(dt) maxDate FROM gauge_data GROUP BY site_code,variable) b ON a.site_code = b.site_code AND a.variable='S' AND a.variable=b.variable AND a.dt = b.maxDate) AS e
+WHERE site_code IN (SELECT source_fea FROM gageloc WHERE reachcode LIKE '%s%%')
+""", huc8)
+
+  return json.dumps(cur.fetchall()[0])
+
+
+
 @app.route('/gauges/list/<string:xmin>/<string:ymin>/<string:xmax>/<string:ymax>', methods=['GET'])
 def show_gaugelist(xmin,ymin,xmax,ymax):
   cur = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
