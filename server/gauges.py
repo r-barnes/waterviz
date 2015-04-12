@@ -2,6 +2,7 @@
 import os
 from flask import Flask, jsonify, send_from_directory, abort, Response, request
 import psycopg2
+import psycopg2.extras
 
 app = Flask(__name__)
 
@@ -13,8 +14,7 @@ conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password
 
 @app.route('/gauges/list/<string:xmin>/<string:ymin>/<string:xmax>/<string:ymax>', methods=['GET'])
 def show_gaugelist(xmin,ymin,xmax,ymax):
-  print('hi')
-  cur = conn.cursor()
+  cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
 
   cur.execute("""
     SELECT *, ST_X(the_geom) as lng, ST_Y(the_geom) as lat
@@ -27,10 +27,7 @@ def show_gaugelist(xmin,ymin,xmax,ymax):
             900913)
   """, {"xmin":xmin,"ymin":ymin,"xmax":xmax,"ymax":ymax})
 
-  print(cur.fetchall())
-
-  return Response("hi", mimetype='text')
-  #return Response(outcss, mimetype='text/css')
+  return jsonify(cur.fetchall())
 
 if __name__ == '__main__':
     app.run(debug=True)
