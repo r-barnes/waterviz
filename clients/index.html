@@ -90,7 +90,7 @@ function riverStyle(feature) {
     console.log(data);
     var ret = "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;";
     if(data.drank)
-      ret += "fillColor:"+((marker.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*marker.drank)]:'gray')+";";
+      ret += "fillColor:"+((data.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*data.drank)]:'gray')+";";
     else
       ret += "#29439c;"
     return ret;
