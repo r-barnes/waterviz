@@ -6,6 +6,7 @@
 <title>Leaflet vector tile map of rivers</title>
 
 <!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />-->
+<script>L_PREFER_CANVAS = true;</script>
 <!--[if lte IE 8]>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.ie.css" />
 <![endif]-->
@@ -28,8 +29,10 @@ body {
     -webkit-border-radius: 5px;
     border-radius: 5px;
 }
-.leaflet-layer img { -webkit-filter: grayscale(100%); }
 </style>
+
+<!--.leaflet-layer img { -webkit-filter: grayscale(100%); }-->
+
 
 </head><body>
 
@@ -85,7 +88,7 @@ function riverStyle(feature) {
              "opacity": 1.0, };
 }
 
-L.tileLayer('/nlcd/{z}/{x}/{y}.png').addTo(map);
+L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true}).addTo(map);
 
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
 var geojsonURL = "/rivers/{z}/{x}/{y}.json";
