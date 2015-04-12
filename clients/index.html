@@ -90,9 +90,9 @@ function riverStyle(feature) {
     console.log(data);
     var ret = "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;";
     if(data.drank)
-      ret += "color:"+((data.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*data.drank)]:'gray')+";";
+      ret += "stroke:"+((data.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*data.drank)]:'gray')+";";
     else
-      ret += "color:#29439c;"
+      ret += "stroke:#29439c;"
     console.log(ret);
     return ret;
   });
