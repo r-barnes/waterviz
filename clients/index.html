@@ -31,7 +31,7 @@ body {
     border-radius: 5px;
 }
 
-path.river          { stroke: #29439c;stroke-linejoin:round;stroke-linecap:round;fill:none; }
+path.river          { /*stroke: #29439c;*/stroke-linejoin:round;stroke-linecap:round;fill:none; }
 path.highlightriver {stroke: red;stroke-linejoin:round;stroke-linecap:round;fill:none;}
 </style>
 
@@ -88,10 +88,12 @@ L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true}).addTo(map);
 function riverStyle(feature) {
   $.getJSON('/gauges/reachflow/'+feature.properties.huc8, function(data){
     console.log(data);
+    var ret = "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;";
     if(data.drank)
-      return "stroke-width: " + 10*data.drank * map.getZoom()/13 + "px;";
+      ret += "fillColor:"+((marker.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*marker.drank)]:'gray')+";";
     else
-      return "stroke-width: 2px;";
+      ret += "#29439c;"
+    return ret;
   });
 }
 
