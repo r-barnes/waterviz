@@ -99,12 +99,14 @@ map.addLayer(riverLayer);
 
 map.on('dragend', function(e) {
   //$('#spinnerBox').fadeIn();
-  getData();
+  getStations();
 });
 
 var markers = new L.FeatureGroup();
 
-function getData() {
+var grad_colours = ['#b2182b','#d6604d','#f4a582','#fddbc7','#f7f7f7','#d1e5f0','#92c5de','#4393c3','#2166ac']
+
+function getStations() {
   // Clear markers before getting new ones
   markers.clearLayers();
 
@@ -121,16 +123,16 @@ function getData() {
   $.getJSON(addy, function(data) {
     //iterate over each 311 complaint, add a marker to the map
     for (var i = 0; i < data.length; i++) {
-      var marker = data[i];
+      var marker     = data[i];
       var markerItem = L.circleMarker(
         [marker.lat,marker.lng],
-	{
-	    radius: 5,
-	    color:     'black',
-	    fillColor: 'black',
-	    fillOpacity: 0.5
-	}
-	);
+      	{
+    	    radius:      5,
+    	    color:       'black',
+    	    fillColor:   grad_colours[int(grad_colours.length*marker.drank)],
+    	    fillOpacity: 0.5
+      	}
+      );
 
       // markerItem.bindPopup(
       //   '<h4>' + marker.complaint_type + '</h4>'
