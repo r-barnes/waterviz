@@ -30,9 +30,8 @@ body {
     border-radius: 5px;
 }
 
-path { stroke-linejoin; round; stroke-linecap: round; fill: none; }
-path.river { stroke: #29439c; }
-path.highlightriver {stroke: red;}
+path.river { stroke: #29439c;stroke-linejoin:round;stroke-linecap:round;fill:none; }
+path.highlightriver {stroke: red;stroke-linejoin:round;stroke-linecap:round;fill:none;}
 </style>
 
 </head><body>
@@ -122,18 +121,16 @@ function getData() {
   $.getJSON(addy, function(data) {
     //iterate over each 311 complaint, add a marker to the map
     for (var i = 0; i < data.length; i++) {
-
       var marker = data[i];
       var markerItem = L.circleMarker(
-        [marker.lat,marker.lng], {
-          radius:      5,
-          fill:        true,
-          fillColor:   "#000",
-          color:       "#000",
-          weight:      1,
-          opacity:     1,
-          fillOpacity: 1,
-        });
+        [marker.lat,marker.lng], 
+	{
+	    radius: 5,
+	    color:     'black',
+	    fillColor: 'black',
+	    fillOpacity: 0.5
+	}
+	);
 
       // markerItem.bindPopup(
       //   '<h4>' + marker.complaint_type + '</h4>'
