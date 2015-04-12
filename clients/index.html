@@ -85,6 +85,46 @@ stateLayer.addTo(map);
 L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true}).addTo(map);
 
 
+var requestsPool = {
+  requests: {}, //list of urls
+  timeouts: {},
+  timeout:  1000*60*10, //In milliseconds
+  fetch: function(url) {
+    if(requestsPool.exists(url))
+      return requestsPool.requests[url];
+
+    requestsPool.timeouts[url] = setTimeout(function(u) {
+        requestsPool.remove(u);
+    }.bind(this, url), requestsPool.timeout); //Defining the timeout
+
+    requestsPool.requests[url] = $.getJSON(url);
+    return requestsPool.requests[url];
+  },
+  exists: function(url) {
+    return requestsPool.requests.hasOwnProperty(url); //Return the Timeout ID if present or undefined
+  },
+  remove: function(url) {
+    requestsPool.cancel(url);
+    delete requestsPool.requests[url];
+  },
+  cancel: function(url) {
+    clearTimeout(requestsPool.timeouts[url]); //cancel the timeout
+    delete requestsPool.timeouts[url];
+  }
+}
+
+
+
+
+
+
+
+function StyleTheRivers(feature){
+  requestsPool.fetch('/gauges/reachflow/'+feature.properties.huc8)
+  .done(function(val){
+    console.log(val);
+  });
+}
 //$.getJSON('/gauges/reachflow/'+feature.properties.huc8, function(data){
 
 // Style the river lines; width depends on its Strahler number
@@ -93,6 +133,7 @@ function riverStyle(feature) {
 }
 
 function riverClass(feature){
+  StyleTheRivers(feature.properties.huc8);
   return "river " + feature.properties.huc8;
 }
 
