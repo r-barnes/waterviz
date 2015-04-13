@@ -161,7 +161,8 @@ var baseLayers = {
 
 var overlays = {
   "Rivers":         riverLayer,
-  "Gauge Stations": markers
+  "Gauge Stations": markers,
+  "Counties":       counties
 };
 
 L.control.layers(baseLayers, overlays).addTo(map);
