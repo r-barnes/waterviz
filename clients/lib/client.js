@@ -99,6 +99,7 @@ $.getJSON("/counties.json",
       "weight":  3,
       "opacity": 0.65
     });
+    counties.addTo(map);
 });
 
 map.on('dragend', function(e) {
