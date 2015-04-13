@@ -89,7 +89,7 @@ var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
 });
 map.addLayer(riverLayer);
 
-var countystyle={
+var countystyle = {
   "color":       "black",
   "fillColor":   "gray",
   "stroke":      "black",
@@ -98,7 +98,40 @@ var countystyle={
   "fillOpacity": 0.65
 };
 
-var counties = new L.geoJson(null,{style:countystyle}).addTo(map);
+function highlightCounty(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera) {
+        layer.bringToFront();
+    }
+
+    console.log(layer.feature.properties);
+}
+
+function resetCounty(e) {
+    geojson.resetStyle(e.target);
+}
+
+function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
+}
+
+function onEachCounty(feature, layer) {
+    layer.on({
+        mouseover: highlightCounty,
+        mouseout:  resetCounty,
+        click:     zoomToFeature
+    });
+}
+
+var counties = new L.geoJson(null,{style:countystyle,onEachFeature:onEachCounty}).addTo(map);
 $.getJSON("/counties.json",
   function(data) {
     $(data.features).each(function(key, data) {
