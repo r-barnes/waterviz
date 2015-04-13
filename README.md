@@ -31,7 +31,7 @@ Future improvements to the project include optimizing server-side database queri
 In terms of project stats, the server holds 50 gigabytes of explorable data. To
 perform county-level buffer strip analysis over 11 terabytes of intermediate
 products were generated and a few hundred hours of supercomputing time were
-expended.
+expended. Being a student can have its benefits!
 
 Technical details are available on the project's [GitHub page](https://github.com/r-barnes/waterviz).
 
