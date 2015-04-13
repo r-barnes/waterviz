@@ -67,10 +67,14 @@ path.highlightriver {stroke: yellow !important; }
   text-align:  center;
   font-size:   10px;
   float:       left;
+  border:      1px solid black;
 }
 
 .nlcdgrad {
   width: 20px;
+}
+
+.wdgrad{
   color: black;
 }
 
