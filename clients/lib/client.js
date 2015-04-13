@@ -153,7 +153,6 @@ function getStations() {
           'Rank: ' + marker.drank.toFixed(2) + '<br>' +
           'More info <a href="'+marker.featuredet+'">here</a>'
           );
-        console.log(marker);
       });
 
       // markerItem.bindPopup(
