@@ -93,12 +93,12 @@ var counties = new L.geoJson();
 counties.addTo(map);
 $.getJSON("/counties.json",
   function(data) {
-    counties = new L.geoJson(data,{
+    counties = new L.geoJson(data,{style:{
       "stroke":  "black",
       "fill":    "gray",
       "weight":  3,
       "opacity": 0.65
-    });
+    }});
     counties.addTo(map);
 });
 
