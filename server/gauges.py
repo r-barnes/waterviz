@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import os
-from flask import Flask, jsonify, send_from_directory, abort, Response, request
+from flask import Flask, jsonify, send_from_directory, abort, Response, request, g
 import psycopg2
 import psycopg2.extras
 import json
