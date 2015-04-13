@@ -89,18 +89,20 @@ var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
 });
 map.addLayer(riverLayer);
 
+var countystyle={
+  "stroke":  "black",
+  "fill":    "gray",
+  "weight":  3,
+  "opacity": 0.65
+};
+
 var counties = new L.geoJson();
 counties.addTo(map);
 $.getJSON("/counties.json",
   function(data) {
-    counties = new L.geoJson(data,{style:{
-      "stroke":  "black",
-      "fill":    "gray",
-      "weight":  3,
-      "opacity": 0.65
-    }});
-    counties.addTo(map);
-});
+    counties = new L.geoJson(data,{style:countystyle}).addTo(map);
+  }
+);
 
 map.on('dragend', function(e) {
   //$('#spinnerBox').fadeIn();
