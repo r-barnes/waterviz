@@ -91,7 +91,6 @@ map.addLayer(riverLayer);
 
 var countystyle = {
   "color":       "black",
-  "fillColor":   "gray",
   "stroke":      "black",
   "weight":      3,
 };
