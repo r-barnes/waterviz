@@ -20,7 +20,7 @@ def show_reachflow(huc8):
   huc8+='%'
 
   cur.execute("""
-SELECT avg(dvalue) as dvalue, avg(svalue) as svalue, avg(drank) as drank FROM (
+SELECT avg(dvalue) as dvalue, avg(svalue) as svalue, avg(drank) as drank, min(sdt) as sdt, min(ddt) as ddt FROM (
     SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data AS a
     JOIN (
       SELECT site_code, variable, max(dt) maxDate FROM gauge_data GROUP BY site_code,variable) b
