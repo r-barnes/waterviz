@@ -125,7 +125,8 @@ function zoomToFeature(e) {
 
 function onEachCounty(feature, layer) {
   console.log(feature,layer);
-  layer._container.attr('id',feature.properties.STATE+feature.properties.COUNTY);
+  //layer._container.attr('id',feature.properties.STATE+feature.properties.COUNTY);
+  layer.addClass('hi');
   layer.on({
       mouseover: highlightCounty,
       mouseout:  resetCounty,
