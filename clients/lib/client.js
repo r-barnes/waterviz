@@ -98,6 +98,8 @@ var markers = new L.FeatureGroup();
 
 var grad_colours = ['#b2182b','#d6604d','#f4a582','#fddbc7','#f7f7f7','#d1e5f0','#92c5de','#4393c3','#2166ac']
 
+L.control.layers().addTo(map);
+
 function getStations() {
   // Clear markers before getting new ones
   markers.clearLayers();
