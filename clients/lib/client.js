@@ -134,7 +134,8 @@ function onEachCounty(feature, layer) {
 var counties = new L.geoJson(null,{style:countystyle,onEachFeature:onEachCounty}).addTo(map);
 $.getJSON("/counties.json",
   function(data) {
-    $(data.features).each(function(key, data) {
+    $(data.features.slice(0,20)).each(function(key, data) {
+      console.log(data);
       data.id = data.properties.state+data.properties.county;
       counties.addData(data);
     });
