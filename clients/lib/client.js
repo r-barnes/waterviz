@@ -13,7 +13,7 @@ var basemap = L.tileLayer(esriRelief, {
   attribution: '<a href="http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2">ESRI shaded relief</a>, <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php">NHDPlus v2</a>',
   maxZoom: 13
 });
-basemap.addTo(map);
+//basemap.addTo(map);
 
 // Add a single GeoJSON vector file for state boundaries
 // This was loaded statically as a script; could also be AJAX
