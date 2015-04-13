@@ -55,14 +55,13 @@ SELECT site_code,
       svalue,
       to_char(sdt, 'YYYY-MM-DD HH24:MI') as ddt,
       dvalue,
-      featuredet
       (SELECT percent_rank(dvalue) WITHIN GROUP (ORDER BY ave ASC) as drank
          FROM gage_smooth
          WHERE month=13 and year>=1985 and site_no=site_code
          GROUP BY site_no
       ),
       (SELECT station_nm FROM gageinfo WHERE gageid=site_code LIMIT 1) as name
-FROM (SELECT source_fea AS site_code, ST_X(geom) as lng, ST_Y(geom) as lat, featuredet
+FROM (SELECT source_fea AS site_code, ST_X(geom) as lng, ST_Y(geom) as lat
         FROM   gageloc
         WHERE  geom
         @ -- contained by, gets fewer rows -- ONE YOU NEED!
