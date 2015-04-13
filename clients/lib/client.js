@@ -24,7 +24,7 @@ stateLayer.setStyle({ "color": "#444",
                       "opacity": 1.0 });
 stateLayer.addTo(map);
 
-var nlcdlayer = L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true}).addTo(map);
+var nlcdlayer = L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true,opacity:0.7}).addTo(map);
 
 
 var requestsPool = {
