@@ -136,7 +136,7 @@ $.getJSON("/counties.json",
   function(data) {
     $(data.features.slice(0,20)).each(function(key, data) {
       console.log(data);
-      data.id = data.properties.state+data.properties.county;
+      data.id = data.properties.STATE+data.properties.COUNTY;
       counties.addData(data);
     });
   }
