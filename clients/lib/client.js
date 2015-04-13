@@ -111,8 +111,6 @@ function highlightCounty(e) {
     if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
     }
-
-    console.log(layer.feature.properties);
 }
 
 function resetCounty(e) {
@@ -135,7 +133,6 @@ var counties = new L.geoJson(null,{style:countystyle,onEachFeature:onEachCounty}
 $.getJSON("/counties.json",
   function(data) {
     $(data.features).each(function(key, data) {
-      console.log(data);
       counties.addData(data);
     });
   }
