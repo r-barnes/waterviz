@@ -59,8 +59,7 @@ SELECT site_code,
          FROM gage_smooth
          WHERE month=13 and year>=1985 and site_no=site_code
          GROUP BY site_no
-      ),
-      (SELECT station_nm FROM gageinfo WHERE gageid=site_code LIMIT 1) as name
+      )
 FROM (SELECT source_fea AS site_code, ST_X(geom) as lng, ST_Y(geom) as lat
         FROM   gageloc
         WHERE  geom
@@ -73,6 +72,7 @@ FROM (SELECT source_fea AS site_code, ST_X(geom) as lng, ST_Y(geom) as lat
         ORDER BY random() LIMIT 500) AS c
 NATURAL JOIN (SELECT a.site_code,a.dt as ddt, a.value as dvalue FROM gauge_data AS a JOIN (SELECT site_code, variable, max(dt) maxDate FROM gauge_data GROUP BY site_code,variable) b ON a.site_code = b.site_code AND a.variable='D' AND a.variable=b.variable AND a.dt = b.maxDate) AS d
 NATURAL JOIN (SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data AS a JOIN (SELECT site_code, variable, max(dt) maxDate FROM gauge_data GROUP BY site_code,variable) b ON a.site_code = b.site_code AND a.variable='S' AND a.variable=b.variable AND a.dt = b.maxDate) AS e
+JOIN (SELECT * FROM gageinfo WHERE gageid=a.site_code LIMIT 1) g
   """, {"xmin":xmin,"ymin":ymin,"xmax":xmax,"ymax":ymax})
 
   return json.dumps(cur.fetchall())
