@@ -100,6 +100,7 @@ def get_mapstyle(water_code):
 
   print(request.args)
   percentile_max = request.args.get('percentile_max', 98);
+  percentile_max = int(percentile_max)
   print(percentile_max);
 
   cdgood = [v['changedata'][0] if v['changedata'] else 0 for county, v in aggdata[water_code].items()]
