@@ -54,8 +54,9 @@ path.highlightriver {stroke: yellow !important; }
   text-align:  center;
   font-weight: bold;
   color:       white;
-  font-size:   23px;
+  font-size:   18px;
   line-height: 25px;
+  border:      2px solid black;
 }
 
 .wdgrad, .nlcdgrad {
@@ -70,6 +71,7 @@ path.highlightriver {stroke: yellow !important; }
 
 .nlcdgrad {
   width: 20px;
+  color: black;
 }
 
 #legend{
