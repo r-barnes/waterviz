@@ -17,25 +17,11 @@
 <script src="lib/TileLayer.d3_geoJSON.js"></script>
 <script type="text/javascript" src="us-states.js"></script>
 
-<style type="text/css">
-html, body { height: 100% }
-#map { min-height: 100%; }
-body {
-    margin: 0;
-    font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 12px;
-    overflow: hidden;
-    background-color: #f00;
-}
-.leaflet-popup-content-wrapper {
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-}
-
-path.river          { /*stroke: #29439c;*/stroke-linejoin:round;stroke-linecap:round;fill:none; }
-path.highlightriver {stroke: yellow !important; }
-</style>
+<link rel="stylesheet" href="css/client.css" />
 
 </head><body>
+
+<div id="headerbar"></div>
 
 <div id="map"></div>
 
