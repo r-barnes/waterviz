@@ -98,11 +98,12 @@ var countystyle={
   "fillOpacity": 0.65
 };
 
-var counties = new L.geoJson();
-counties.addTo(map);
+var counties = new L.geoJson(null,{style:countystyle}).addTo(map);
 $.getJSON("/counties.json",
   function(data) {
-    counties = new L.geoJson(data,{style:countystyle}).addTo(map);
+    $(data.features).each(function(key, data) {
+      counties.addData(data);
+    });
   }
 );
 
