@@ -6,16 +6,35 @@ See the [live map](http://waterviz.com) and [the source code](https://github.com
 
 ## Introduction
 
-WaterViz aims to provide a high-level view of water availability and factors affecting its quantity and quality by providing a visual overview of real-time river conditions in the conterminous United States. Rivers and all active U.S. gauge stations are colored and sized based on how their current discharge rate ranks against a thirty year history. Optionally, current land use can be displayed, as well as an analysis of how land use has changed in proximity to water.
+WaterViz aims to provide a high-level view of water availability and factors affecting its quantity and quality by providing a visual overview of real-time river conditions in the conterminous United States. All U.S. rivers and all active U.S. gauge stations are colored and sized based on how their current discharge rate ranks against a thirty year history. Optionally, current land use can be displayed, as well as an analysis of how land use has changed in proximity to water.
 
+## Details
 
+[WaterViz.com](http://waterviz.com) aims to provide an intuitive view of the current state of water in the conterminous United States. To do so, it presents all of the relevant information in a mapped form.
 
-Hovering over rivers and stations
+Hydrographic data drawn from the [National Hydrography Dataset Plus](http://www.horizon-systems.com/nhdplus/) allows the map to display all rivers and active U.S. gauge stations. These are colored and sized based on how their current discharge rate ranks against a thirty year history. Hovering over rivers and stations will display their current discharge rate and stage height, along with links for more information. Current discharge rates are drawn from
+the [National Water Information System](http://waterdata.usgs.gov/nwis/rt)
 
-visualize the current discharge rate and stage height of rivers
-in the conterminuous United States along with information to aid in
-understanding the hydrography of the U.S. The project draws data from a variety
-of sources to make this happen.
+To facilitate understanding of current conditions, the [National Land Cover
+Database, 2011 edition](http://www.mrlc.gov/nlcd2011.php) has been used to
+generate a base layer showing a 20-classification land-use through 13 distinct
+zoom levels.
+
+To facilitate understanding of the relationships between land-use and water, the [National Hydrography Dataset Plus](http://www.horizon-systems.com/nhdplus/) was burned into raster format and proximity-to-water rasters were developed. These were used in conjunction with the [National Land Cover Database edition](http://www.mrlc.gov/nlcd2011.php) 2001 and 2011 editions to quantify how land-use has changed with regards to proximity to water over the past decade.
+
+This information is displayed on a per-county basis (using the [Census TIGER/Line files](http://www2.census.gov/geo/tiger/GENZ2013/cb_2013_us_county_5m.zip)) where counties are coloured from white to deep red depending on how much near-shore development they have incurred.
+
+Put another way, the foregoing provides an analysis of riparian buffer zones. The lack of such zones has much to do with poor water quality and dead zones downstream and policy action to expand buffer zone size and quantity has become a [hot topic](http://www.startribune.com/lifestyle/health/299464721.html) recently.
+
+Future improvements to the project include optimizing server-side database queries and caching. While the project is set up to update data in real-time, updating has been disabled for the next couple of weeks as a proof-of-concept to ensure speedy performance. Additionally improvements will be made to the user interface to facilitate deeper exploration of the data.
+
+In terms of project stats, the server holds 50 gigabytes of explorable data. To
+perform county-level buffer strip analysis over 11 terabytes of intermediate
+products were generated and a few hundred hours of supercomputing time were
+expended.
+
+Technical details are available on the project's [GitHub page](https://github.com/r-barnes/waterviz).
+
 
 ## Technology
 
@@ -52,6 +71,7 @@ of sources to make this happen.
 1. [NHDPlus](http://www.horizon-systems.com/nhdplus/): Source for river flowlines, gauge locations, gauge information, and gauge history
 2. [NLCD 2011](http://www.mrlc.gov/nlcd2011.php): Source for the land use information
 3. [Census TIGER/Line](http://www2.census.gov/geo/tiger/GENZ2013/cb_2013_us_county_5m.zip): Source for county outlines
+4. [National Water Information System](http://waterdata.usgs.gov/nwis/rt): Source of real-time hydrography data
 
 ## Getting started
 
