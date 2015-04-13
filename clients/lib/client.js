@@ -97,7 +97,7 @@ function countystyle(feature) {
     "fill":        "gray",
     "weight":      3,
     "fillOpacity": 0.65,
-    class: feature.properties.STATE+feature.properties.COUNTY
+    "className":   "cheese" //feature.properties.STATE+feature.properties.COUNTY
   };
 }
 
