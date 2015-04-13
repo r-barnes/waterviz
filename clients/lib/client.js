@@ -91,16 +91,13 @@ map.addLayer(riverLayer);
 
 var counties = new L.geoJson();
 counties.addTo(map);
-$.getJSON({
-  dataType: "json",
-  url:      "counties.json",
-  success:  function(data) {
+$.getJSON("/counties.json",
+  function(data) {
     console.log('BARLAR',data.length);
     $(data.features).each(function(key, data) {
         counties.addData(data);
     });
-}
-}).error(function() {});
+});
 
 map.on('dragend', function(e) {
   //$('#spinnerBox').fadeIn();
