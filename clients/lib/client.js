@@ -214,7 +214,6 @@ function getStations() {
 
       markers.addLayer(markerItem);
     });
-    map.addLayer(markers);
   });
 }
 
