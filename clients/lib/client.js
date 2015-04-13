@@ -64,7 +64,7 @@ var requestsPool = {
 function StyleTheRivers(feature){
   requestsPool.fetch('/gauges/reachflow/'+feature.properties.huc8)
   .done(function(val){
-    $('.h'+feature.properties.huc8).css('stroke', (val.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*val.drank)]:'gray' );
+    $('.h'+feature.properties.huc8).css('stroke', (val.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*val.drank)]:'#FF00DE' );
     $('.h'+feature.properties.huc8).css('stroke-width', ((val.drank!==null)?(6*val.drank).toString():'2')+'px' );
   });
 }
