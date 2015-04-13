@@ -10,8 +10,8 @@ if (!window.location.hash) {
 var esriRelief = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}';
 
 var basemap = L.tileLayer(esriRelief, {
-        attribution: '<a href="http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2">ESRI shaded relief</a>, <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php">NHDPlus v2</a>',
-        maxZoom: 13
+  attribution: '<a href="http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2">ESRI shaded relief</a>, <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php">NHDPlus v2</a>',
+  maxZoom: 13
 });
 basemap.addTo(map);
 
@@ -98,7 +98,18 @@ var markers = new L.FeatureGroup();
 
 var grad_colours = ['#b2182b','#d6604d','#f4a582','#fddbc7','#f7f7f7','#d1e5f0','#92c5de','#4393c3','#2166ac']
 
-//L.control.layers(basemap,stateLayer,nlcdlayer).addTo(map);
+var baseLayers = {
+  "Terrain": basemap,
+};
+
+var overlays = {
+  "NLCD":           nlcdlayer,
+  "Rivers":         riverLayer,
+  "Gauge Stations": markers
+};
+
+L.control.layers(baseLayers, overlays).addTo(map);
+
 
 function getStations() {
   // Clear markers before getting new ones
