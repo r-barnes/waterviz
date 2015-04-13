@@ -42,7 +42,12 @@ L.TileLayer.d3_geoJSON =  L.TileLayer.extend({
                     .attr("style", self.options.style)
                     .attr("data-huc8", function(x){return x.properties.huc8;})
                     .attr("data-name", function(x){return x.properties.name;})
-                    .on("mouseover", function(x) { console.log(x.properties.name);$('#headerbar').html(x.properties.name);d3.select(d3.event.target).classed("highlightriver", true); })
+                    .on("mouseover", function(x) {
+                        $('#headerbar').html(x.properties.name);
+                        d3.select(d3.event.target).classed("highlightriver", true);
+                        $('#bottomright').html(
+                            )
+                    })
                     .on("mouseout",  function(x) { d3.select(d3.event.target).classed("highlightriver", false); });
             });
         }
