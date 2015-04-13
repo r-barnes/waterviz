@@ -133,7 +133,7 @@ function getStations() {
         {
           radius:      5,
           color:       'black',
-          fillColor:   (marker.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*marker.drank)]:'gray',
+          fillColor:   (marker.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*marker.drank)]:'#FF00DE',
           fillOpacity: 1
         }
       );
