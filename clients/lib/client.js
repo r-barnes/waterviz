@@ -116,7 +116,7 @@ function highlightCounty(e) {
 }
 
 function resetCounty(e) {
-    geojson.resetStyle(e.target);
+    counties.resetStyle(e.target);
 }
 
 function zoomToFeature(e) {
