@@ -131,7 +131,7 @@ function getStations() {
           '<span class="ddate">'+marker.sdt+'</span><br>' +
           'Discharge: ' + marker.dvalue + ' cfs<br>' +
           '<span class="ddate">'+marker.ddt+'</span><br>' +
-          'Rank: ' + marker.drank
+          'Rank: ' + marker.drank.toFixed(2)
           );
         console.log(marker);
       });
