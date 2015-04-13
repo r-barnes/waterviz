@@ -150,6 +150,13 @@ function getStations() {
   });
 }
 
+
+$('.nlcdgrad').hover(function(e){
+  var classname = $(e.target).data('classname');
+  $('#nlcdexplanation').html(classname);
+})
+
+
 /*var counties = new L.geoJson();
 counties.addTo(map);
 $.getJSON({
