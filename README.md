@@ -12,6 +12,8 @@ WaterViz aims to provide a high-level view of water availability and factors aff
 
 [WaterViz.com](http://waterviz.com) aims to provide an intuitive view of the current state of water in the conterminous United States. To do so, it presents all of the relevant information in a mapped form.
 
+A walk-through video is [here](https://youtu.be/ve2Zm53DyQM) and a video showing how WaterViz.com can be used to facilitate analysis is [here](https://youtu.be/VW811vI6DvQ).
+
 Hydrographic data drawn from the [National Hydrography Dataset Plus](http://www.horizon-systems.com/nhdplus/) allows the map to display all rivers and active U.S. gauge stations. These are colored and sized based on how their current discharge rate ranks against a thirty year history. Hovering over rivers and stations will display their current discharge rate and stage height, along with links for more information. Current discharge rates are drawn from
 the [National Water Information System](http://waterdata.usgs.gov/nwis/rt)
 
