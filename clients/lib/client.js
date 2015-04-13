@@ -127,9 +127,9 @@ function getStations() {
       markerItem.on('mouseover', function(){
         $('#headerbar').html(marker.name);
         $('#bottomright').html(
-          'Stage: ' + marker.svalue + '<br>' +
+          'Stage: ' + marker.svalue + ' ft<br>' +
           '<span class="ddate">'+marker.sdt+'</span><br>' +
-          'Discharge: ' + marker.dvalue + '<br>' +
+          'Discharge: ' + marker.dvalue + ' cfs<br>' +
           '<span class="ddate">'+marker.ddt+'</span><br>' +
           'Rank: ' + marker.drank
           );

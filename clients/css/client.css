@@ -33,14 +33,16 @@ path.highlightriver {stroke: yellow !important; }
   position:               fixed;
   right:                  0;
   bottom:                 0;
-  width:                  200px;
-  height:                 200px;
-  background-color:       rgba(0,0,255,0.3);
+  width:                  180px;
+  height:                 140px;
+  background-color:       rgba(0,0,255,0.5);
   color:                  white;
   z-index:                100;
   border-top-left-radius: 20px;
+  padding:                10px;
+  font-size:              20px;
 }
 
 .ddate {
-  font-size: 80%;
+  font-size: 60%;
 }
