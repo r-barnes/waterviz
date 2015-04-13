@@ -129,7 +129,7 @@ function onEachCounty(feature, layer) {
   });
 }
 
-var counties = new L.geoJson(null,{style:countystyle,onEachFeature:onEachCounty}).addTo(map);
+var counties = new L.geoJson(null,{style:countystyle,onEachFeature:onEachCounty});
 $.getJSON("/counties.json",
   function(data) {
     $(data.features).each(function(key, data) {
@@ -137,6 +137,8 @@ $.getJSON("/counties.json",
     });
   }
 );
+
+setTimeout(function(){colourCounties('allwater',95);},1000*5);
 
 map.on('dragend', function(e) {
   //$('#spinnerBox').fadeIn();
