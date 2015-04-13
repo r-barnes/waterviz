@@ -47,9 +47,9 @@ L.TileLayer.d3_geoJSON =  L.TileLayer.extend({
                         d3.select(d3.event.target).classed("highlightriver", true);
                         if(riverinfo[x.properties.huc8]){
                             $('#bottomright').html(
-                              'Avg Stage: ' + riverinfo[x.properties.huc8].svalue + ' ft<br>' +
+                              'Avg Stage: ' + riverinfo[x.properties.huc8].svalue.toFixed(1) + ' ft<br>' +
                               '<span class="ddate">'+riverinfo[x.properties.huc8].sdt+'</span><br>' +
-                              'Avg Discharge: ' + riverinfo[x.properties.huc8].dvalue + ' cfs<br>' +
+                              'Avg Discharge: ' + riverinfo[x.properties.huc8].dvalue.toFixed(1) + ' cfs<br>' +
                               '<span class="ddate">'+riverinfo[x.properties.huc8].ddt+'</span><br>' +
                               'Avg Rank: ' + riverinfo[x.properties.huc8].drank.toFixed(2) + '<br>'
                             )
