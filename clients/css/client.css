@@ -46,3 +46,18 @@ path.highlightriver {stroke: yellow !important; }
 .ddate {
   font-size: 60%;
 }
+
+.wdgrad {
+  width:50px;
+  height:50px;
+}
+
+#legend{
+  position:                fixed;
+  left:                    0;
+  bottom:                  0;
+  height:                  200px;
+  width:                   500px;
+  background-color:        rgba(0,0,255,0.5);
+  border-top-right-radius: 20px;
+}
