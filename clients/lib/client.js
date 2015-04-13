@@ -134,7 +134,7 @@ function onEachCounty(feature, layer) {
 var counties = new L.geoJson(null,{style:countystyle,onEachFeature:onEachCounty}).addTo(map);
 $.getJSON("/counties.json",
   function(data) {
-    $(data.features.slice(0,20)).each(function(key, data) {
+    $(data.features).each(function(key, data) {
       console.log(data);
       counties.addData(data);
     });
@@ -222,10 +222,12 @@ function getStations() {
 function colourCounties(style,percentile_max){
   $.getJSON('/county/style/'+style+'?percentile_max='+percentile_max,function(data){
     counties.setStyle(function(feature){
-      console.log(feature.properties.state);
+      var myid = feature.properties.STATE+feature.properties.COUNTY;
+      return data[myid];
     });
   });
 }
+colourCounties('allwater',95);
 
 
 $('.nlcdgrad').hover(function(e){
