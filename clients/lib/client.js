@@ -96,21 +96,25 @@ var countystyle = {
 };
 
 function highlightCounty(e) {
-    var layer = e.target;
+  var layer = e.target;
 
-    layer.setStyle({
-      weight:      5,
-      color:       '#666',
-      dashArray:   '',
-    });
+  layer.setStyle({
+    weight:      5,
+    color:       '#666',
+  });
 
-    if (!L.Browser.ie && !L.Browser.opera) {
-        layer.bringToFront();
-    }
+  if (!L.Browser.ie && !L.Browser.opera) {
+      layer.bringToFront();
+  }
 }
 
 function resetCounty(e) {
-    counties.resetStyle(e.target);
+  var layer = e.target;
+
+  layer.setStyle({
+    weight: 3,
+    color:  "black"
+  });
 }
 
 function zoomToFeature(e) {
