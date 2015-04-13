@@ -72,7 +72,7 @@ function StyleTheRivers(feature){
 
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
-  return "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;stroke:#E55FFF;";
+  return "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;stroke:#FF00DE;";
 }
 
 function riverClass(feature){
