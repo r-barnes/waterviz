@@ -70,5 +70,6 @@ path.highlightriver {stroke: yellow !important; }
   width:                   500px;
   background-color:        rgba(0,0,255,0.5);
   border-top-right-radius: 20px;
-  z-index:100;
+  z-index:                 100;
+  padding-top:             5px;
 }
