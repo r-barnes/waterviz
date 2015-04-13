@@ -60,7 +60,7 @@ path.highlightriver {stroke: yellow !important; }
 }
 
 .wdgrad, .nlcdgrad {
-  width:        40px;
+  width:        39px;
   height:       25px;
   display:      inline-block;
   line-height:  25px;
@@ -71,7 +71,7 @@ path.highlightriver {stroke: yellow !important; }
 }
 
 .nlcdgrad {
-  width: 20px;
+  width: 19px;
 }
 
 .wdgrad{
