@@ -89,13 +89,18 @@ var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
 });
 map.addLayer(riverLayer);
 
-var counties = new L.geoJson();
+var counties = new L.geoJson(null,{
+  "stroke":  "black",
+  "fill":    "gray",
+  "weight":  3,
+  "opacity": 0.65
+});
 counties.addTo(map);
 $.getJSON("/counties.json",
   function(data) {
     console.log('BARLAR',data.length);
     $(data.features).each(function(key, data) {
-        counties.addData(data);
+      counties.addData(data);
     });
 });
 
