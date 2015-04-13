@@ -110,11 +110,10 @@ def get_mapstyle(water_code):
   if len(nating)>0:
     natmax = np.percentile(nating,percentile_max)
 
-  outcss = "path{fill:#d0d0d0}"
+  outdict = {}
   for county,v in aggdata[water_code].items():
     if not v['changedata']:
       continue
-    #print('b',v['changedata'][0])
     val = v['changedata'][0]
     if val>=0:
       val   = val/devmax
@@ -123,11 +122,9 @@ def get_mapstyle(water_code):
       val   = abs(val)/natmax
       color = 'green'
     val = min(val,1)
-    #print('a',val)
-    #outcss += '#%s{background-color:rgb(%.2f,%.2f,%.2f)}' % (county, val, val, val)
-    outcss += '#c%s{fill:%s;fill-opacity:%.2f}\n' % (county,color,val)
+    outdict[county] = {"fillColor":color,"fillOpacity":val}
 
-  return Response(outcss, mimetype='text/css')
+  return jsonify(outdict)
 
 @app.route('/county/<string:water_code>/<string:county>', methods=['GET'])
 def get_county_data(water_code,county):
