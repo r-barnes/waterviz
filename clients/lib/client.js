@@ -128,9 +128,9 @@ function getStations() {
         $('#headerbar').html(marker.name);
         $('#bottomright').html(
           'Stage: ' + marker.svalue + '<br>' +
-          '<span class="ddate">'+marker.sdt+'</span>' +
+          '<span class="ddate">'+marker.sdt+'</span><br>' +
           'Discharge: ' + marker.dvalue + '<br>' +
-          '<span class="ddate">'+marker.ddt+'</span>' +
+          '<span class="ddate">'+marker.ddt+'</span><br>' +
           'Rank: ' + marker.drank
           );
         console.log(marker);

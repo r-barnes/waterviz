@@ -26,17 +26,19 @@ path.highlightriver {stroke: yellow !important; }
   z-index:          100;
   color:            white;
   font-weight:      bold;
+  border-radius:    0 0 20px 20px;
 }
 
 #bottomright{
-  position:         fixed;
-  right:            0;
-  bottom:           0;
-  width:            200px;
-  height:           200px;
-  background-color: rgba(0,0,255,0.3);
-  color:            white;
-  z-index:          100;
+  position:               fixed;
+  right:                  0;
+  bottom:                 0;
+  width:                  200px;
+  height:                 200px;
+  background-color:       rgba(0,0,255,0.3);
+  color:                  white;
+  z-index:                100;
+  border-top-left-radius: 20px;
 }
 
 .ddate {
