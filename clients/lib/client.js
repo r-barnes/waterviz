@@ -93,9 +93,7 @@ var countystyle = {
   "color":       "black",
   "fillColor":   "gray",
   "stroke":      "black",
-  "fill":        "gray",
   "weight":      3,
-  "fillOpacity": 0.65
 };
 
 function highlightCounty(e) {
