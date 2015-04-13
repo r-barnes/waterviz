@@ -89,14 +89,18 @@ var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
 });
 map.addLayer(riverLayer);
 
-var countystyle = {
-  "color":       "black",
-  "fillColor":   "gray",
-  "stroke":      "black",
-  "fill":        "gray",
-  "weight":      3,
-  "fillOpacity": 0.65
-};
+function countystyle(feature) {
+  return {
+    "color":       "black",
+    "fillColor":   "gray",
+    "stroke":      "black",
+    "fill":        "gray",
+    "weight":      3,
+    "fillOpacity": 0.65,
+    className: feature.properties.STATE+feature.properties.COUNTY
+  };
+}
+
 
 function highlightCounty(e) {
     var layer = e.target;
