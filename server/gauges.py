@@ -93,7 +93,7 @@ NATURAL JOIN (SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data 
 
 
 
-@app.route('/county/<string:water_code>.css')
+@app.route('/county/style/<string:water_code>')
 def get_mapstyle(water_code):
   if water_code not in aggdata:
     abort(404)
