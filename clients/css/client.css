@@ -48,9 +48,14 @@ path.highlightriver {stroke: yellow !important; }
 }
 
 .legendwrap {
-  width:  400px;
-  margin: 0 auto;
-  height: 25px;
+  width:       400px;
+  margin:      0 auto;
+  height:      25px;
+  text-align:  center;
+  font-weight: bold;
+  color:       white;
+  font-size:   23px;
+  line-height: 25px;
 }
 
 .wdgrad, .nlcdgrad {
