@@ -47,9 +47,10 @@ path.highlightriver {stroke: yellow !important; }
   font-size: 60%;
 }
 
-#wdgradwrap, #nlcdgradwrap {
+.legendwrap {
   width:  400px;
   margin: 0 auto;
+  height: 25px;
 }
 
 .wdgrad, .nlcdgrad {
