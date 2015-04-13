@@ -55,12 +55,14 @@ SELECT site_code,
       svalue,
       to_char(sdt, 'YYYY-MM-DD HH24:MI') as ddt,
       dvalue,
+      featuredet,
+      name,
       (SELECT percent_rank(dvalue) WITHIN GROUP (ORDER BY ave ASC) as drank
          FROM gage_smooth
          WHERE month=13 and year>=1985 and site_no=site_code
          GROUP BY site_no
       )
-FROM (SELECT source_fea AS site_code, ST_X(geom) as lng, ST_Y(geom) as lat
+FROM (SELECT source_fea AS site_code, ST_X(geom) as lng, ST_Y(geom) as lat, featuredet
         FROM   gageloc
         WHERE  geom
         @ -- contained by, gets fewer rows -- ONE YOU NEED!
@@ -72,7 +74,7 @@ FROM (SELECT source_fea AS site_code, ST_X(geom) as lng, ST_Y(geom) as lat
         ORDER BY random() LIMIT 500) AS c
 NATURAL JOIN (SELECT a.site_code,a.dt as ddt, a.value as dvalue FROM gauge_data AS a JOIN (SELECT site_code, variable, max(dt) maxDate FROM gauge_data GROUP BY site_code,variable) b ON a.site_code = b.site_code AND a.variable='D' AND a.variable=b.variable AND a.dt = b.maxDate) AS d
 NATURAL JOIN (SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data AS a JOIN (SELECT site_code, variable, max(dt) maxDate FROM gauge_data GROUP BY site_code,variable) b ON a.site_code = b.site_code AND a.variable='S' AND a.variable=b.variable AND a.dt = b.maxDate) AS e
-JOIN (SELECT * FROM gageinfo WHERE gageid=a.site_code LIMIT 1) g
+JOIN (SELECT station_nm as name FROM gageinfo WHERE gageid=a.site_code LIMIT 1) g
   """, {"xmin":xmin,"ymin":ymin,"xmax":xmax,"ymax":ymax})
 
   return json.dumps(cur.fetchall())
