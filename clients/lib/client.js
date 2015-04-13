@@ -125,6 +125,14 @@ function getStations() {
         }
       );
       markerItem.on('mouseover', function(){
+        $('#headerbar').html(marker.name);
+        $('#bottomright').html(
+          'Stage: ' + marker.svalue + '<br>' +
+          '<span class="ddate">'+marker.sdt+'</span>' +
+          'Discharge: ' + marker.dvalue + '<br>' +
+          '<span class="ddate">'+marker.ddt+'</span>' +
+          'Rank: ' + marker.drank
+          );
         console.log(marker);
       });
 

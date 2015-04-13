@@ -27,3 +27,18 @@ path.highlightriver {stroke: yellow !important; }
   color:            white;
   font-weight:      bold;
 }
+
+#bottomright{
+  position:         fixed;
+  right:            0;
+  bottom:           0;
+  width:            200px;
+  height:           200px;
+  background-color: rgba(0,0,255,0.3);
+  color:            white;
+  z-index:          100;
+}
+
+.ddate {
+  font-size: 80%;
+}
