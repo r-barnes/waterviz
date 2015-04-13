@@ -4,8 +4,13 @@ from flask import Flask, jsonify, send_from_directory, abort, Response, request,
 import psycopg2
 import psycopg2.extras
 import json
+import pickle
+import numpy as np
 
 app = Flask(__name__)
+
+aggregated_stats_file = 'county_agg_stats.p'
+aggdata               = pickle.load(open(aggregated_stats_file, "rb"))
 
 @app.before_request
 def before_request():
@@ -85,6 +90,67 @@ NATURAL JOIN (SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data 
   """, {"xmin":xmin,"ymin":ymin,"xmax":xmax,"ymax":ymax})
 
   return json.dumps(cur.fetchall())
+
+
+
+@app.route('/county/<string:water_code>.css')
+def get_mapstyle(water_code):
+  if water_code not in aggdata:
+    abort(404)
+
+  print(request.args)
+  percentile_max = request.args.get('percentile_max', 98);
+  print(percentile_max);
+
+  cdgood = [v['changedata'][0] if v['changedata'] else 0 for county, v in aggdata[water_code].items()]
+  deving = np.array(list(filter(lambda x: x >= 0, cdgood)))
+  nating = -np.array(list(filter(lambda x: x<0, cdgood)))
+
+  devmax = np.percentile(deving,percentile_max)
+  if len(nating)>0:
+    natmax = np.percentile(nating,percentile_max)
+
+  outcss = "path{fill:#d0d0d0}"
+  for county,v in aggdata[water_code].items():
+    if not v['changedata']:
+      continue
+    #print('b',v['changedata'][0])
+    val = v['changedata'][0]
+    if val>=0:
+      val   = val/devmax
+      color = 'red'
+    elif val<0:
+      val   = abs(val)/natmax
+      color = 'green'
+    val = min(val,1)
+    #print('a',val)
+    #outcss += '#%s{background-color:rgb(%.2f,%.2f,%.2f)}' % (county, val, val, val)
+    outcss += '#c%s{fill:%s;fill-opacity:%.2f}\n' % (county,color,val)
+
+  return Response(outcss, mimetype='text/css')
+
+@app.route('/county/<string:water_code>/<string:county>', methods=['GET'])
+def get_county_data(water_code,county):
+  print(water_code,county)
+  if water_code not in aggdata or county not in aggdata[water_code]:
+    abort(404)
+
+  return jsonify(aggdata[water_code][county])
+
+@app.route('/county/list', methods=['GET'])
+def get_counties():
+  allkeys = [list(v.keys()) for x,v in aggdata.items()]
+  allkeys = list(set([x for sl in allkeys for x in sl]))
+  print(allkeys)
+  return jsonify({'counties':allkeys})
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True,processes=4)
