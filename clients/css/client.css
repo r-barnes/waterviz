@@ -18,9 +18,12 @@ path.highlightriver {stroke: yellow !important; }
   position:         fixed;
   width:            50%;
   left:             25%;
-  height:           2em;
-  font-size:        1.5em;
-  padding-top:      0.5em;
-  background-color: rgba(0,0,255,0.5);
+  height:           30px;
+  font-size:        26px;
+  padding-top:      2px;
+  background-color: rgba(0,0,255,0.3);
   text-align:       center;
+  z-index:          100;
+  color:            white;
+  font-weight:      bold;
 }
