@@ -99,10 +99,9 @@ function highlightCounty(e) {
     var layer = e.target;
 
     layer.setStyle({
-        weight: 5,
-        color: '#666',
-        dashArray: '',
-        fillOpacity: 0.7
+      weight:      5,
+      color:       '#666',
+      dashArray:   '',
     });
 
     if (!L.Browser.ie && !L.Browser.opera) {
