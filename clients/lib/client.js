@@ -59,11 +59,12 @@ var requestsPool = {
 
 
 
-
+var riverinfo = {};
 
 function StyleTheRivers(feature){
   requestsPool.fetch('/gauges/reachflow/'+feature.properties.huc8)
   .done(function(val){
+    riverinfo[feature.properties.huc8]=val;
     $('.h'+feature.properties.huc8).css('stroke', (val.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*val.drank)]:'#FF00DE' );
     $('.h'+feature.properties.huc8).css('stroke-width', ((val.drank!==null)?(6*val.drank+2).toString():'2')+'px' );
   });
