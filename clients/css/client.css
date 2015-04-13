@@ -17,7 +17,7 @@ path.highlightriver {stroke: yellow !important; }
 #headerbar {
   position:         fixed;
   width:            50%;
-  left:             50%;
+  left:             25%;
   height:           2em;
   font-size:        1.5em;
   padding-top:      0.5em;
