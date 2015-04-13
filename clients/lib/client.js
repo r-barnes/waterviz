@@ -135,6 +135,7 @@ var counties = new L.geoJson(null,{style:countystyle,onEachFeature:onEachCounty}
 $.getJSON("/counties.json",
   function(data) {
     $(data.features).each(function(key, data) {
+      data.id = data.properties.state+data.properties.county;
       counties.addData(data);
     });
   }
@@ -215,6 +216,12 @@ function getStations() {
       markers.addLayer(markerItem);
     });
     map.addLayer(markers);
+  });
+}
+
+function colourCounties(style,percentile_max){
+  $.getJSON('/county/'+style+'.css?percentile_max='+percentile_max,function(data){
+
   });
 }
 
