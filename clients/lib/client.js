@@ -90,10 +90,12 @@ var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
 map.addLayer(riverLayer);
 
 var countystyle={
-  "stroke":  "black",
-  "fill":    "gray",
-  "weight":  3,
-  "opacity": 0.65
+  "color":       "black",
+  "fillColor":   "gray",
+  "stroke":      "black",
+  "fill":        "gray",
+  "weight":      3,
+  "fillOpacity": 0.65
 };
 
 var counties = new L.geoJson();
