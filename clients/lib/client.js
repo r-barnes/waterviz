@@ -95,6 +95,10 @@ map.on('dragend', function(e) {
   getStations();
 });
 
+map.on('zoomend', function() {
+  getStations();
+});
+
 var markers = new L.FeatureGroup();
 map.addLayer(markers);
 
