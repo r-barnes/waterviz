@@ -7,7 +7,15 @@ import json
 
 app = Flask(__name__)
 
-conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password='NONE'")
+@app.before_request
+def before_request():
+  g.db = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password='NONE'")
+
+@app.teardown_request
+def teardown_request(exception):
+  db = getattr(g, 'db', None)
+  if db is not None:
+      db.close()
 
 #@app.route('/')
 #def index():
@@ -15,7 +23,7 @@ conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password
 
 @app.route('/gauges/reachflow/<string:huc8>', methods=['GET'])
 def show_reachflow(huc8):
-  cur = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
+  cur = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
 
   huc8+='%'
 
@@ -44,7 +52,7 @@ WHERE site_code IN (SELECT source_fea FROM gageloc WHERE reachcode LIKE %(huc8)s
 
 @app.route('/gauges/list/<string:xmin>/<string:ymin>/<string:xmax>/<string:ymax>', methods=['GET'])
 def show_gaugelist(xmin,ymin,xmax,ymax):
-  cur = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
+  cur = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
 
 
   cur.execute("""
