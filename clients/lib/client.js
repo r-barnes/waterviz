@@ -176,6 +176,9 @@ $('.nlcdgrad').hover(function(e){
   $('#nlcdexplanation').html('NLCD Legend (hover over colours for details)');
 })
 
+$(document).ready(function(){
+  getStations();
+});
 
 /*var counties = new L.geoJson();
 counties.addTo(map);
