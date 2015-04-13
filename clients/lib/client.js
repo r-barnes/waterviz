@@ -154,6 +154,8 @@ function getStations() {
 $('.nlcdgrad').hover(function(e){
   var classname = $(e.target).data('classname');
   $('#nlcdexplanation').html(classname);
+}, function(){
+  $('#nlcdexplanation').html('NLCD Legend (hover over colours for details)');
 })
 
 
