@@ -124,11 +124,12 @@ function zoomToFeature(e) {
 }
 
 function onEachCounty(feature, layer) {
-    layer.on({
-        mouseover: highlightCounty,
-        mouseout:  resetCounty,
-        click:     zoomToFeature
-    });
+  layer.attr('id',data.properties.STATE+data.properties.COUNTY);
+  layer.on({
+      mouseover: highlightCounty,
+      mouseout:  resetCounty,
+      click:     zoomToFeature
+  });
 }
 
 var counties = new L.geoJson(null,{style:countystyle,onEachFeature:onEachCounty}).addTo(map);
@@ -136,7 +137,6 @@ $.getJSON("/counties.json",
   function(data) {
     $(data.features.slice(0,20)).each(function(key, data) {
       console.log(data);
-      data.id = data.properties.STATE+data.properties.COUNTY;
       counties.addData(data);
     });
   }
