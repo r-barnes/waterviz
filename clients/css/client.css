@@ -60,14 +60,14 @@ path.highlightriver {stroke: yellow !important; }
 }
 
 .wdgrad, .nlcdgrad {
-  width:       40px;
-  height:      25px;
-  display:     inline-block;
-  line-height: 25px;
-  text-align:  center;
-  font-size:   10px;
-  float:       left;
-  border:      1px solid black;
+  width:        40px;
+  height:       25px;
+  display:      inline-block;
+  line-height:  25px;
+  text-align:   center;
+  font-size:    10px;
+  float:        left;
+  border-right: 1px solid black;
 }
 
 .nlcdgrad {
