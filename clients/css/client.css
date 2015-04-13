@@ -47,12 +47,12 @@ path.highlightriver {stroke: yellow !important; }
   font-size: 60%;
 }
 
-#wdgradwrap {
+#wdgradwrap, #nlcdgradwrap {
   width:  400px;
   margin: 0 auto;
 }
 
-.wdgrad {
+.wdgrad, .nlcdgrad {
   width:       40px;
   height:      25px;
   display:     inline-block;
@@ -60,6 +60,10 @@ path.highlightriver {stroke: yellow !important; }
   text-align:  center;
   font-size:   10px;
   float:       left;
+}
+
+.nlcdgrad {
+  width: 20px;
 }
 
 #legend{
