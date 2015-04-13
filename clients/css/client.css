@@ -81,8 +81,8 @@ path.highlightriver {stroke: yellow !important; }
   position:                fixed;
   left:                    0;
   bottom:                  0;
-  height:                  200px;
-  width:                   500px;
+  height:                  130px;
+  width:                   430px;
   background-color:        rgba(0,0,255,0.5);
   border-top-right-radius: 20px;
   z-index:                 100;
