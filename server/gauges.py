@@ -79,4 +79,4 @@ NATURAL JOIN (SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data 
   return json.dumps(cur.fetchall())
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,threaded=True,processes=4)
