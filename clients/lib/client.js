@@ -220,8 +220,10 @@ function getStations() {
 }
 
 function colourCounties(style,percentile_max){
-  $.getJSON('/county/'+style+'.css?percentile_max='+percentile_max,function(data){
-
+  $.getJSON('/county/style/'+style+'?percentile_max='+percentile_max,function(data){
+    counties.setStyle(function(feature){
+      console.log(feature.properties.state);
+    });
   });
 }
 
