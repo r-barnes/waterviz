@@ -54,6 +54,8 @@ L.TileLayer.d3_geoJSON =  L.TileLayer.extend({
                               '<span class="ddate">'+riverinfo[x.properties.huc8].ddt+'</span><br>' +
                               'Avg Rank: ' + riverinfo[x.properties.huc8].drank.toFixed(2) + '<br>'
                             )
+                        } else {
+                            $('#bottomright').html('');
                         }
                     })
                     .on("mouseout",  function(x) { d3.select(d3.event.target).classed("highlightriver", false); });
