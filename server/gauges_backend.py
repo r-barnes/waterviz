@@ -120,4 +120,11 @@ for state in states:
   for notice in conn.notices:
     print notice
 
-  cur.execute("UPDATE gauge_data SET huc8=(SELECT substring(reachcode from 1 for 8) FROM gageloc WHERE source_fea=site_code) WHERE huc8 IS NULL;")
+  #cur.execute("UPDATE gauge_data SET huc8=(SELECT substring(reachcode from 1 for 8) FROM gageloc WHERE source_fea=site_code) WHERE huc8 IS NULL;")
+
+cur.execute("""
+  UPDATE gauge_data SET q.huc8 = substring(a.huc8 from 1 for 8)
+  FROM gauge_data q INNER JOIN gageloc a
+  ON q.site_code = a.source_fea
+  WHERE q.huc8 IS NULL
+""")
