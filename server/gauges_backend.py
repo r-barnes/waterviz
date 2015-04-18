@@ -89,6 +89,8 @@ def getData(state):
       variable_code = translate_variable_code[variable_code]
       timestamp     = s['values'][0]['value'][0]['dateTime']
       value         = float(s['values'][0]['value'][0]['value'])
+      if variable_code=='D':
+        ret.append( (site_code,'R',timestamp,None) )
       ret.append( (site_code,variable_code,timestamp,value) )
     except:
       pass
@@ -118,3 +120,4 @@ for state in states:
   for notice in conn.notices:
     print notice
 
+  cur.execute("UPDATE gauge_data SET huc8=(SELECT substring(reachcode from 1 for 8) FROM gageloc WHERE source_fea=site_code) WHERE huc8 IS NULL;")
