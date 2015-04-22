@@ -83,35 +83,11 @@ function riverClass(feature){
   return "river h" + feature.properties.huc8;
 }
 
-function highlightRiver(feature){
-  var layer = d3.select(e.target);
-  console.log('hi',e.target);
-  layer.classed("highlightriver", true);
-}
-
-function resetRiver(feature){
-  var layer = d3.select(e.target);
-  layer.classed("highlightriver", false);
-}
-
-function zoomToRiver(feature){
-
-}
-
-function onEachRiver(feature, layer) {
-  layer.on({
-      mouseover: highlightRiver,
-      mouseout:  resetRiver,
-      click:     zoomToRiver
-  });
-}
-
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
 var geojsonURL = "/rivers/{z}/{x}/{y}.json";
 var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
   class:         riverClass,
   style:         riverStyle,
-  onEachFeature: onEachRiver
 });
 map.addLayer(riverLayer);
 
