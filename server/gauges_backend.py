@@ -164,9 +164,9 @@ WITH new_values (huc8,dvalue,svalue,drank,jday) AS (
 upsert AS
 (
     UPDATE reach_summary m
-        SET dvalue = MAX(m.dvalue,nv.dvalue),
-            svalue = MAX(m.svalue,nv.svalue),
-            drank  = MAX(m.drank, nv.drank )
+        SET dvalue = GREATEST(m.dvalue,nv.dvalue),
+            svalue = GREATEST(m.svalue,nv.svalue),
+            drank  = GREATEST(m.drank, nv.drank )
     FROM new_values nv
     WHERE m.huc8 = nv.huc8 AND m.jday=nv.jday
     RETURNING m.*
