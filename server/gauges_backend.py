@@ -115,7 +115,7 @@ def getData(state):
       reach_code = gauges_to_huc8[site_code]
 
       if not reach_code in agg_data:
-        agg_data[reach_code]={'dvalue':[],'svalue':[],'drank':[]}
+        agg_data[reach_code] = {'huc8':reach_code,'dvalue':[],'svalue':[],'drank':[]}
       this_ad = agg_data[reach_code]
       if variable_code=='00065': #Stage
         this_ad['svalue'].append(value)
@@ -148,21 +148,44 @@ for k,v in agg_data.iteritems():
   else:
     v['drank'] = None
 
+cur.execute("CREATE TEMP TABLE tmp AS SELECT * FROM reach_summary WITH NO DATA")
+#cur.execute("CREATE TABLE tmp  ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
+#cur.executemany("""INSERT INTO tmp(huc8,dvalue,svalue,drank,jday) VALUES (%(huc8)s, %(dvalue)s, %(svalue)s, %(drank)s, now()::date-'1970-01-01'::date)""", agg_data)
+
+cur.executemany("""
+WITH new_values (huc8,dvalue,svalue,drank,jday) AS (
+  VALUES (%(huc8)s, %(dvalue)s, %(svalue)s, %(drank)s, now()::date-'1970-01-01'::date)
+),
+upsert AS
+(
+    UPDATE reach_summary m
+        SET dvalue = MAX(dvalue,nv.dvalue),
+            svalue = MAX(svalue,nv.svalue),
+            drank  = MAX(drank, nv.drank )
+    FROM new_values nv
+    WHERE m.huc8 = nv.huc8 AND m.jday=nv.jday
+    RETURNING m.*
+)
+INSERT INTO reach_summary (huc8,dvalue,svalue,drank,jday)
+SELECT huc8,dvalue,svalue,drank,jday
+FROM new_values
+WHERE NOT EXISTS (SELECT 1
+                  FROM upsert up
+                  WHERE up.id = new_values.id AND up.jday = new_values.jday)
+""", agg_data)
+
+conn.commit()
 
 
 
-#   cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
-#   #cur.execute("CREATE TABLE tmp AS SELECT * FROM gauge_data with no data")
-#   cur.executemany("""INSERT INTO tmp(site_code,variable,dt,value) VALUES (%s, %s, %s, %s)""", data)
-
-#   cur.execute("""
-#   INSERT INTO gauge_data
-#   SELECT * FROM tmp
-#   WHERE (site_code,variable,dt) NOT IN (
-#       SELECT site_code,variable,dt
-#       FROM gauge_data
-#   );
-#   """)
+# cur.execute("""
+#    INSERT INTO reach_summary
+#    SELECT * FROM tmp
+#    WHERE (site_code,variable,dt) NOT IN (
+#        SELECT site_code,variable,dt
+#        FROM gauge_data
+#    );
+# """)
 
 #   conn.commit()
 
