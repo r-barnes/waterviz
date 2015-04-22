@@ -133,9 +133,20 @@ for state in states:
   data = getData(state['abbrev'])
 
 for k,v in agg_data.iteritems():
-  v['svalue'] = np.average(v['svalue'])
-  v['dvalue'] = np.average(v['dvalue'])
-  v['drank']  = np.average(v['drank'])
+  if len(v['svalue'])>0:
+    v['svalue'] = np.average(v['svalue'])
+  else:
+    v['svalue'] = None
+
+  if len(v['dvalue'])>0:
+    v['dvalue'] = np.average(v['dvalue'])
+  else:
+    v['dvalue'] = None
+
+  if len(v['drank'])>0:
+    v['drank'] = np.average(v['drank'])
+  else:
+    v['drank'] = None
 
 
 
