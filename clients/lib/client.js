@@ -131,7 +131,7 @@ function onEachCounty(feature, layer) {
   });
 }
 
-var counties = new L.geoJson(null,{style:countystyle,onEachFeature:onEachCounty}).addTo(map);
+var counties = new L.geoJson(null,{style:countystyle,onEachFeature:onEachCounty});
 $.getJSON("/counties.json",
   function(data) {
     $(data.features).each(function(key, data) {
