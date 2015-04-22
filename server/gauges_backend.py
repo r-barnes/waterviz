@@ -154,8 +154,8 @@ for k,v in agg_data.iteritems():
   else:
     v['drank'] = None
 
-cur.execute("CREATE TEMP TABLE tmp AS SELECT * FROM reach_summary WITH NO DATA")
-#cur.execute("CREATE TABLE tmp  ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
+cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM reach_summary WITH NO DATA")
+#cur.execute("CREATE TABLE tmp   AS SELECT * FROM gauge_data with no data")
 #cur.executemany("""INSERT INTO tmp(huc8,dvalue,svalue,drank,jday) VALUES (%(huc8)s, %(dvalue)s, %(svalue)s, %(drank)s, now()::date-'1970-01-01'::date)""", agg_data)
 
 #Convert agg_data into a list suitable for mass insertion into the db
