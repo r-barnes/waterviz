@@ -159,7 +159,7 @@ print agg_data[0]
 
 cur.executemany("""
 WITH new_values (huc8,dvalue,svalue,drank,jday) AS (
-  VALUES (%(huc8)s, %(dvalue)s, %(svalue)s, %(drank)s, now()::date-'1970-01-01'::date)
+  VALUES (%(huc8)s, CAST(%(dvalue)s AS REAL), CAST(%(svalue)s AS REAL), CAST(%(drank)s AS REAL), now()::date-'1970-01-01'::date)
 ),
 upsert AS
 (
