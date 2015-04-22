@@ -108,10 +108,12 @@ def getData(state):
       #variable_code = translate_variable_code[variable_code]
       timestamp     = s['values'][0]['value'][0]['dateTime']
       value         = float(s['values'][0]['value'][0]['value'])
-      reach_code    = gauges_to_huc8[site_code]
-      if not reach_code:
+
+      if not site_code in gauges_to_huc8:
         print "No reach found for %s" % (site_code)
         continue
+      reach_code = gauges_to_huc8[site_code]
+
       if not reach_code in agg_data:
         agg_data[reach_code]={'dvalue':[],'svalue':[],'drank':[]}
       this_ad = agg_data[reach_code]
@@ -121,7 +123,8 @@ def getData(state):
         this_ad['dvalue'].append(value)
         if site_code in historic_data:
           this_ad['drank'].append(scipy.stats.percentileofscore(historic_data[site_code],value))
-
+    except:
+      pass
 
 
 
