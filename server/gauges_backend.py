@@ -132,23 +132,31 @@ def getData(state):
 for state in states:
   data = getData(state['abbrev'])
 
-  cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
-  #cur.execute("CREATE TABLE tmp AS SELECT * FROM gauge_data with no data")
-  cur.executemany("""INSERT INTO tmp(site_code,variable,dt,value) VALUES (%s, %s, %s, %s)""", data)
-
-  cur.execute("""
-  INSERT INTO gauge_data
-  SELECT * FROM tmp
-  WHERE (site_code,variable,dt) NOT IN (
-      SELECT site_code,variable,dt
-      FROM gauge_data
-  );
-  """)
-
-  conn.commit()
-
-  for notice in conn.notices:
-    print notice
+for k,v in agg_data.iteritems():
+  v['svalue'] = np.average(v['svalue'])
+  v['dvalue'] = np.average(v['dvalue'])
+  v['drank']  = np.average(v['drank'])
 
 
-#cur.execute("UPDATE gauge_data SET huc8=(SELECT substring(reachcode from 1 for 8) FROM gageloc WHERE source_fea=site_code) WHERE huc8 IS NULL;")
+
+
+#   cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
+#   #cur.execute("CREATE TABLE tmp AS SELECT * FROM gauge_data with no data")
+#   cur.executemany("""INSERT INTO tmp(site_code,variable,dt,value) VALUES (%s, %s, %s, %s)""", data)
+
+#   cur.execute("""
+#   INSERT INTO gauge_data
+#   SELECT * FROM tmp
+#   WHERE (site_code,variable,dt) NOT IN (
+#       SELECT site_code,variable,dt
+#       FROM gauge_data
+#   );
+#   """)
+
+#   conn.commit()
+
+#   for notice in conn.notices:
+#     print notice
+
+
+# #cur.execute("UPDATE gauge_data SET huc8=(SELECT substring(reachcode from 1 for 8) FROM gageloc WHERE source_fea=site_code) WHERE huc8 IS NULL;")
