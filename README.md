@@ -54,14 +54,15 @@ Technical details are available on the project's [GitHub page](https://github.co
 3. [Gunicorn](http://gunicorn.org/): A Python web server container
 4. [Flask](http://flask.pocoo.org/): A Python microframework web server
 5. [Numpy](http://www.numpy.org/): Used for number crunching in determine county statistics
-6. [Psycopg2](http://initd.org/psycopg/): A Python library for interfacing with PostGIS
-7. [Nginx](http://nginx.org/en/): A light-weight, secure, fast web server through which we will proxy all the other servers to gain security and cacheing
-8. [`pip`](http://www.pip-installer.org/en/latest/): Used to install the latest Python packages
-9. [p7zip](http://p7zip.sourceforge.net/) for unpacking NHDPlus and NLCD data. Ubuntu users be sure to install `p7zip-full`.
-10. shp2pgsql, part of PostGIS, for importing ESRI shapefiles into PostGIS
-11. [pgdbf](https://github.com/kstrauser/pgdbf) for importing DBF databases into PostgreSQL. Note you need at least version 0.6.2 for the `-s` flag.
-12. [requests](http://docs.python-requests.org/en/latest/): Used to retrieve real-time hydrographic data
-13. [gdal](http://www.gdal.org/): For creating NLCD tiles and performing statistics on them
+7. [Scipy](http://www.scipy.org/): Used to determine flow rankings
+8. [Psycopg2](http://initd.org/psycopg/): A Python library for interfacing with PostGIS
+9. [Nginx](http://nginx.org/en/): A light-weight, secure, fast web server through which we will proxy all the other servers to gain security and cacheing
+10. [`pip`](http://www.pip-installer.org/en/latest/): Used to install the latest Python packages
+11. [p7zip](http://p7zip.sourceforge.net/) for unpacking NHDPlus and NLCD data. Ubuntu users be sure to install `p7zip-full`.
+12. shp2pgsql, part of PostGIS, for importing ESRI shapefiles into PostGIS
+13. [pgdbf](https://github.com/kstrauser/pgdbf) for importing DBF databases into PostgreSQL. Note you need at least version 0.6.2 for the `-s` flag.
+14. [requests](http://docs.python-requests.org/en/latest/): Used to retrieve real-time hydrographic data
+15. [gdal](http://www.gdal.org/): For creating NLCD tiles and performing statistics on them
 
 ### Client side
 1. [Leaflet](http://leafletjs.com/): A simple, blazin' fast map handlin' library
