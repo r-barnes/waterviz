@@ -22,6 +22,9 @@ has been modified for reading into PostgreSQL using:
     Track_type     CHAR(5)
   );
 
+  create index hurricane_id on hurricane(stormid);
+  create index hurricane_time on hurricane(iso_time);
+
 The following code is for importing data to the table.
 
   \COPY hurricane FROM 'Allstorms.ibtracs_wmo.v03r06.csv' WITH DELIMITER ',' CSV HEADER
