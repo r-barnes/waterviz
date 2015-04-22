@@ -155,8 +155,6 @@ cur.execute("CREATE TEMP TABLE tmp AS SELECT * FROM reach_summary WITH NO DATA")
 #Convert agg_data into a list suitable for mass insertion into the db
 agg_data = [v for k,v in agg_data.iteritems()]
 
-print agg_data[0]
-
 cur.executemany("""
 WITH new_values (huc8,dvalue,svalue,drank,jday) AS (
   VALUES (%(huc8)s, CAST(%(dvalue)s AS REAL), CAST(%(svalue)s AS REAL), CAST(%(drank)s AS REAL), now()::date-'1970-01-01'::date)
@@ -180,22 +178,3 @@ WHERE NOT EXISTS (SELECT 1
 """, agg_data)
 
 conn.commit()
-
-
-
-# cur.execute("""
-#    INSERT INTO reach_summary
-#    SELECT * FROM tmp
-#    WHERE (site_code,variable,dt) NOT IN (
-#        SELECT site_code,variable,dt
-#        FROM gauge_data
-#    );
-# """)
-
-#   conn.commit()
-
-#   for notice in conn.notices:
-#     print notice
-
-
-# #cur.execute("UPDATE gauge_data SET huc8=(SELECT substring(reachcode from 1 for 8) FROM gageloc WHERE source_fea=site_code) WHERE huc8 IS NULL;")
