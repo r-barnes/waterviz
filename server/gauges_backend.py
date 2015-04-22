@@ -152,6 +152,11 @@ cur.execute("CREATE TEMP TABLE tmp AS SELECT * FROM reach_summary WITH NO DATA")
 #cur.execute("CREATE TABLE tmp  ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
 #cur.executemany("""INSERT INTO tmp(huc8,dvalue,svalue,drank,jday) VALUES (%(huc8)s, %(dvalue)s, %(svalue)s, %(drank)s, now()::date-'1970-01-01'::date)""", agg_data)
 
+#Convert agg_data into a list suitable for mass insertion into the db
+agg_data = [v for k,v in agg_data.iteritems()]
+
+print agg_data[0]
+
 cur.executemany("""
 WITH new_values (huc8,dvalue,svalue,drank,jday) AS (
   VALUES (%(huc8)s, %(dvalue)s, %(svalue)s, %(drank)s, now()::date-'1970-01-01'::date)
