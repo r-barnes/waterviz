@@ -95,6 +95,9 @@ def getData(state):
   if resp.status_code!=200:
     pass
   resp = resp.json()
+
+  had_no_reach_count = 0
+
   for s in resp['value']['timeSeries']:
     if len(s['variable']['variableCode'])>1:
       print "More variables!"
@@ -111,6 +114,7 @@ def getData(state):
 
       if not site_code in gauges_to_huc8:
         print "No reach found for %s" % (site_code)
+        had_no_reach_count += 1
         continue
       reach_code = gauges_to_huc8[site_code]
 
@@ -126,6 +130,7 @@ def getData(state):
     except:
       pass
 
+  print "%d of %d stations had no associated reaches." % (had_no_reach_count, len(resp['value']['timeSeries']))
 
 
 
