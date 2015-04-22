@@ -140,6 +140,8 @@ $.getJSON("/counties.json",
   }
 );
 
+setTimeout(function(){colourCounties('allwater',95);},1000*5);
+
 map.on('dragend', function(e) {
   //$('#spinnerBox').fadeIn();
   getStations();
@@ -214,7 +216,6 @@ function getStations() {
 
       markers.addLayer(markerItem);
     });
-    map.addLayer(markers);
   });
 }
 
