@@ -48,7 +48,8 @@ L.TileLayer.d3_geoJSON =  L.TileLayer.extend({
                         $('#bottomright').html(
                           'Avg Stage: '     + x.properties.svalue.toFixed(1) + ' ft<br>' +
                           'Avg Discharge: ' + x.properties.dvalue.toFixed(1) + ' cfs<br>' +
-                          'Avg Rank: '      + x.properties.drank.toFixed(2) + '<br>'
+                          'Avg Rank: '      + x.properties.drank.toFixed(2) + '<br>' +
+                          '<span style="font-size:80%">Maximum values for today</span>'
                         );
                     })
                     .on("mouseout",  function(x) { d3.select(d3.event.target).classed("highlightriver", false); });
