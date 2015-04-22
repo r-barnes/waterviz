@@ -85,6 +85,7 @@ function riverClass(feature){
 
 function highlightRiver(feature){
   var layer = d3.select(e.target);
+  console.log('hi',e.target);
   layer.classed("highlightriver", true);
 }
 
