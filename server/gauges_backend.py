@@ -2,6 +2,9 @@
 import requests
 import redis
 import psycopg2
+import psycopg2.extras
+import numpy as np
+import scipy.stats
 
 conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password='NONE'")
 
@@ -66,9 +69,25 @@ states = [
 do_these_states = ["AL","AZ","AR","CA","CO","CT","DE","FL","GA","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"]
 states          = filter(lambda x: x['abbrev'] in do_these_states,states)
 
+
+cur = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
+
+cur.execute("SELECT site_no, array_to_string(array_agg(ave), ',') AS yearly_ave FROM (SELECT site_no, ave FROM gage_smooth WHERE month=13 AND year>=1985 ORDER BY site_no,ave) a GROUP BY site_no")
+historic_data = {}
+for i in cur.fetchall():
+  temp = np.fromstring(i['yearly_ave'], dtype=float, sep=',')
+  historic_data[i['site_no']] = temp
+
+cur.execute("SELECT source_fea AS gaugecode,reachcode FROM gageloc")
+#Fetches a list of, e.g: {'gaugecode': '01109070', 'reachcode': '01090004001157'}
+#Builds a hashmap relating gauges to the reach they are on
+gauges_to_huc8 = {}
+for gauge in cur.fetchall():
+  gauges_to_huc8[gauge['gaugecode']] = gauge['reachcode'][0:8]
+
+agg_data = {}
+
 def getData(state):
-  ret = []
-  translate_variable_code = {'00065':'S', '00060':'D'} #Stage and discharge\
   print("Gathering data for %s" % (state))
   url     = "http://waterservices.usgs.gov/nwis/iv/"
   options = {"format":"json","stateCd":state,"parameterCd":"00060,00065","siteStatus":"active"}
@@ -86,21 +105,29 @@ def getData(state):
     try:
       site_code     = s['sourceInfo']['siteCode'][0]['value']
       variable_code = s['variable']['variableCode'][0]['value']
-      variable_code = translate_variable_code[variable_code]
+      #variable_code = translate_variable_code[variable_code]
       timestamp     = s['values'][0]['value'][0]['dateTime']
       value         = float(s['values'][0]['value'][0]['value'])
-      if variable_code=='D':
-        ret.append( (site_code,'R',timestamp,None) )
-      ret.append( (site_code,variable_code,timestamp,value) )
-    except:
-      pass
+      reach_code    = gauges_to_huc8[site_code]
+      if not reach_code:
+        print "No reach found for %s" % (site_code)
+        continue
+      if not reach_code in agg_data:
+        agg_data[reach_code]={'dvalue':[],'svalue':[],'drank':[]}
+      this_ad = agg_data[reach_code]
+      if variable_code=='00065': #Stage
+        this_ad['svalue'].append(value)
+      elif variable_code=='00060': #Discharge
+        this_ad['dvalue'].append(value)
+        if site_code in historic_data:
+          this_ad['drank'].append(scipy.stats.percentileofscore(historic_data[site_code],value))
 
-  return ret
 
-cur = conn.cursor() #cursor_factory = psycopg2.extras.RealDictCursor)
+
+
+
 for state in states:
   data = getData(state['abbrev'])
-  print("Found %d records for %s." % (len(data),state['abbrev']))
 
   cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_data with no data")
   #cur.execute("CREATE TABLE tmp AS SELECT * FROM gauge_data with no data")
