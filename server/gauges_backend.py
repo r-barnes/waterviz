@@ -5,6 +5,7 @@ import psycopg2
 import psycopg2.extras
 import numpy as np
 import scipy.stats
+import sys
 
 conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password='NONE'")
 
@@ -113,7 +114,7 @@ def getData(state):
       value         = float(s['values'][0]['value'][0]['value'])
 
       if not site_code in gauges_to_huc8:
-        print "No reach found for %s" % (site_code)
+        sys.stderr.write("No reach found for %s\n" % (site_code))
         had_no_reach_count += 1
         continue
       reach_code = gauges_to_huc8[site_code]
