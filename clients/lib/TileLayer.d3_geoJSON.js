@@ -51,6 +51,7 @@ L.TileLayer.d3_geoJSON =  L.TileLayer.extend({
                           'Avg Rank: '      + x.properties.drank.toFixed(2) + '<br>'
                         );
                     })
+                    .on("mouseout",  function(x) { d3.select(d3.event.target).classed("highlightriver", false); });
             });
         }
     }
