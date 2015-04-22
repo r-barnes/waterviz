@@ -44,7 +44,6 @@ L.TileLayer.d3_geoJSON =  L.TileLayer.extend({
                     .attr("data-name", function(x){return x.properties.name;})
                     .on("mouseover", function(x) {
                         $('#headerbar').html(x.properties.name);
-                        d3.select(d3.event.target).classed("highlightriver", true);
                         if(riverinfo[x.properties.huc8]){
                             $('#bottomright').html(
                               'Avg Stage: ' + riverinfo[x.properties.huc8].svalue.toFixed(1) + ' ft<br>' +
@@ -57,7 +56,6 @@ L.TileLayer.d3_geoJSON =  L.TileLayer.extend({
                             $('#bottomright').html('');
                         }
                     })
-                    .on("mouseout",  function(x) { d3.select(d3.event.target).classed("highlightriver", false); });
             });
         }
     }
