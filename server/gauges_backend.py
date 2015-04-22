@@ -176,7 +176,7 @@ SELECT huc8,dvalue,svalue,drank,jday
 FROM new_values
 WHERE NOT EXISTS (SELECT 1
                   FROM upsert up
-                  WHERE up.id = new_values.id AND up.jday = new_values.jday)
+                  WHERE up.huc8 = new_values.huc8 AND up.jday = new_values.jday)
 """, agg_data)
 
 conn.commit()
