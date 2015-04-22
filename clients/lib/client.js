@@ -73,11 +73,15 @@ function StyleTheRivers(feature){
 
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
-  return "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;stroke:#FF00DE;";
+  var fp = feature.properties;
+  return
+    "stroke-width: " + fp.strahler * map.getZoom()/13 + "px" + ';' +
+    "stroke": (fp.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*fp.drank/100.0)]:'#FF00DE' + ';' +
+    "stroke-width:" + ((fp.drank!==null)?(6*fp.drank+2).toString():fp.strahler * map.getZoom()/13)+'px' + ';';
 }
 
 function riverClass(feature){
-  StyleTheRivers(feature);
+//  StyleTheRivers(feature);
   return "river h" + feature.properties.huc8;
 }
 
