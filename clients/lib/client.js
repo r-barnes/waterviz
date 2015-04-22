@@ -75,7 +75,6 @@ function StyleTheRivers(feature){
 function riverStyle(feature) {
   var fp   = feature.properties;
   var temp = "stroke:" + ((fp.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*fp.drank/100.0)]:'#FF00DE') + ';' + "stroke-width:" + ((fp.drank!==null)?(6*fp.drank/100.0+2).toString():fp.strahler * map.getZoom()/13)+'px' + ';';
-  console.log(temp);
   return temp;
 }
 
