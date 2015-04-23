@@ -243,9 +243,13 @@ $('.nlcdgrad').hover(function(e){
   $('#nlcdexplanation').html('NLCD Legend (hover over colours for details)');
 });
 
+hurricanes = {};
 function timeChanged(newtime){
+  //Load hurricanes into a dictionary of type: dict[DATE][STORMID][TRACK]
   $.getJSON('/hurricanes/'+newtime, function(data){
-    console.log(data);
+    _.each(data,function(o){
+      console.log(o);
+    });
   });
 }
 
