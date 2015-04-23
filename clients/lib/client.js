@@ -13,6 +13,15 @@ if (!window.location.hash) {
     map.setView([37.958, -120.976], 8);
 }
 
+// Make the base map; a raster tile relief map from ESRI
+var esriRelief = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}';
+
+var basemap = L.tileLayer(esriRelief, {
+  attribution: '<a href="http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2">ESRI shaded relief</a>, <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php">NHDPlus v2</a>',
+  maxZoom: 13
+});
+//basemap.addTo(map);
+
 // Add a single GeoJSON vector file for state boundaries
 // This was loaded statically as a script; could also be AJAX
 var stateLayer = new L.geoJson(usStates);
@@ -23,13 +32,6 @@ stateLayer.setStyle({ "color": "#444",
 stateLayer.addTo(map);
 
 var nlcdlayer = L.tileLayer('/nlcd/{z}/{x}/{y}.png',{tms:true}).addTo(map);
-
-var esriRelief = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}';
-var terrainLayer = L.tileLayer(esriRelief, {
-  attribution: '<a href="http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2">ESRI shaded relief</a>, <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php">NHDPlus v2</a>',
-  maxZoom: 13
-});
-//terrainLayer.addTo(map);
 
 
 var requestsPool = {
@@ -160,11 +162,11 @@ map.addLayer(markers);
 var grad_colours = ['#b2182b','#d6604d','#f4a582','#fddbc7','#f7f7f7','#d1e5f0','#92c5de','#4393c3','#2166ac']
 
 var baseLayers = {
+  "Terrain": basemap,
   "NLCD":    nlcdlayer,
 };
 
 var overlays = {
-  "Terrain":        terrainLayer,
   "Rivers":         riverLayer,
   "Gauge Stations": markers,
   "Counties":       counties
