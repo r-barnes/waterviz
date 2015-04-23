@@ -1,6 +1,12 @@
 
 // Construct map, center if no location provided
-var map = L.map('map', { maxZoom: 13 } );
+var map = L.map('map', {
+  maxZoom: 13,
+  maxBounds: [
+    [40.712, -125], //Southwest
+    [20,     -66]  //Northeast
+  ]
+});
 var hash = new L.Hash(map);
 if (!window.location.hash) {
     map.setView([37.958, -120.976], 8);
