@@ -95,7 +95,7 @@ NATURAL JOIN (SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data 
 def show_hurricanes(date):
   cur = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
   cur.execute("""SELECT * from hurricane where stormid in (select distinct stormid from hurricane where iso_time=%(time)s)""", {"time":date})
-  return json.dumps(cur.fetchall())
+  return json.dumps({"hurricanes":cur.fetchall()})
 
 @app.route('/county/style/<string:water_code>')
 def get_mapstyle(water_code):
