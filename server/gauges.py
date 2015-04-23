@@ -91,7 +91,10 @@ NATURAL JOIN (SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data 
 
   return json.dumps(cur.fetchall())
 
-
+@app.route('/hurricanes/<string:date>')
+def show_hurricanes(date):
+  cur.execute("""SELECT * from hurricane where stormid in (select distinct stormid from hurricane where iso_time=%(time)s)""", {"time:":date})
+  return json.dumps(cur.fetchall())
 
 @app.route('/county/style/<string:water_code>')
 def get_mapstyle(water_code):
