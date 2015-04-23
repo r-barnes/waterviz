@@ -5,7 +5,8 @@ var map = L.map('map', {
   maxBounds: [
     [50, -125], //Southwest
     [20,  -66]  //Northeast
-  ]
+  ],
+  minZoom: 4
 });
 var hash = new L.Hash(map);
 if (!window.location.hash) {
