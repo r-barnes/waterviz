@@ -247,7 +247,7 @@ $(document).ready(function(){
     minDate:    '1950-01-01',
     maxDate:    'now',
     dateFormat: 'yyyy-mm-dd',
-    onSelect:   function(dates) { console.log(dates); }
+    onSelect:   function(date) { console.log(moment(date)); }
   });
 
   $('#datepicker').val(moment().format('YYYY-MM-DD'));
