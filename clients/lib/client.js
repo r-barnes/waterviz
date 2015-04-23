@@ -2,7 +2,7 @@
 // Construct map, center if no location provided
 var map = L.map('map', {
   maxZoom:   13,
-  minZoom:   2,
+  minZoom:   1,
   maxBounds: [
     [20, -125], //Southwest
     [50,  -66]  //Northeast
