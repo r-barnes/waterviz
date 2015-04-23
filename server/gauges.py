@@ -94,7 +94,7 @@ NATURAL JOIN (SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data 
 @app.route('/hurricanes/<string:date>')
 def show_hurricanes(date):
   cur = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
-  cur.execute("""SELECT stormid, max(name) as name, to_char(DATE(iso_time), 'YYYY-MM-DD') as dt, avg(latitude) as lat, avg(longitude) as lon, max(wind) as wind, max(pres) as pres, max(windpercentile) as windp, max(prespercentile) as presp from hurricane  where track_type='main' and geom @ ST_MakeEnvelope (
+  cur.execute("""SELECT stormid, max(name) as name, to_char(DATE(iso_time), 'YYYY-MM-DD') as dt, avg(latitude) as lat, avg(longitude) as lon, max(wind) as wind, max(pres) as pres, max(windpercentile) as windp, max(prespercentile) as presp from hurricane  where track_type='main' and ST_POINT(lon,lat) @ ST_MakeEnvelope (
           0, 0,     -- bounding
           -179, 90, -- box limits
           900913
