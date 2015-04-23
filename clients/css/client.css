@@ -81,10 +81,13 @@ path.highlightriver {stroke: yellow !important; }
   position:                fixed;
   left:                    0;
   bottom:                  0;
-  height:                  130px;
+  height:                  200px;
   width:                   430px;
   background-color:        rgba(0,0,255,0.5);
   border-top-right-radius: 20px;
   z-index:                 1;
   padding-top:             5px;
 }
+
+.pmbutton { width:25px; height:25px; text-align:center; font-size:18px;font-weight: bold;}
+#datepicker {text-align:center;}

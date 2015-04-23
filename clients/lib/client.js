@@ -234,8 +234,39 @@ $('.nlcdgrad').hover(function(e){
   $('#nlcdexplanation').html(classname);
 }, function(){
   $('#nlcdexplanation').html('NLCD Legend (hover over colours for details)');
-})
+});
+
+function timeChanged(newtime){
+  $.getJSON('/hurricanes/'+newtime, function(data){
+    console.log(data);
+  });
+}
 
 $(document).ready(function(){
+  $('#datepicker').datepick({
+    minDate:    '1950-01-01',
+    maxDate:    'now',
+    dateFormat: 'yyyy-mm-dd'
+  });
+
+  $('#datepicker').val(moment().format('YYYY-MM-DD'));
+
+  $('#dateminus').click(function(){
+    var dedate = moment($('#datepicker').val(), "YYYY-MM-DD");
+    dedate.add(-1, 'days');
+    if(dedate.unix()>=moment('1950-01-01').unix())
+      $('#datepicker').val( dedate.format('YYYY-MM-DD') );
+    timeChanged(dedate.format('YYYY-MM-DD'));
+  });
+
+  $('#dateplus').click(function(){
+    var dedate = moment($('#datepicker').val(), "YYYY-MM-DD");
+    dedate.add(1, 'days');
+    if(dedate.unix()<moment().unix())
+      $('#datepicker').val( dedate.format('YYYY-MM-DD') );
+    timeChanged(dedate.format('YYYY-MM-DD'));
+  });
+
   getStations();
+
 });

@@ -69,6 +69,7 @@ Technical details are available on the project's [GitHub page](https://github.co
 2. [D3.js](http://d3js.org/): Data-driven documents, allows quick loading of river networks
 3. [Underscore.js](http://underscorejs.org/): A JS functional programming library
 4. [jQuery](https://jquery.com/): A library for expediting JS DOM manipulations
+5. [jquery DatePicker](http://keith-wood.name/datepick.HTML): A light-weight JS date picker
 
 ## Data Sources
 1. [NHDPlus](http://www.horizon-systems.com/nhdplus/): Source for river flowlines, gauge locations, gauge information, and gauge history
