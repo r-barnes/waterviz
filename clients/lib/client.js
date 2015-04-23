@@ -243,12 +243,17 @@ $('.nlcdgrad').hover(function(e){
   $('#nlcdexplanation').html('NLCD Legend (hover over colours for details)');
 });
 
-hurricanes = {};
+var hurricanes = {};
+//TODO: Prevent multiple calls to hurricanes for the same date
 function timeChanged(newtime){
-  //Load hurricanes into a dictionary of type: dict[DATE][STORMID][TRACK]
+  //Load hurricanes into a dictionary of type: dict[DATE][STORMID]
   $.getJSON('/hurricanes/'+newtime, function(data){
-    _.each(data,function(o){
-      console.log(o);
+    _.each(data['hurricanes'],function(o){
+      if(_.has(hurricanes,o.dt)) //Don't overwrite our cache
+        return;
+      o.marker                    = L.circle([o.lat, o.lon], 500, {color: 'red',fillColor: '#f03',fillOpacity: 0.5}).addTo(map);
+      hurricanes[o.dt]            = {};
+      hurricanes[o.dt][o.stormid] = o;
     });
   });
 }
