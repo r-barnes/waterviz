@@ -255,7 +255,9 @@ function timeChanged(newtime){
           maxtime: moment('1800-01-01','YYYY-MM-DD').unix(),
           points:  []
         };
-      o.marker = L.geoJson({type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lat,o.lon]}}, {color: 'red',fillColor: '#f03',fillOpacity: 0.5}).addTo(map);
+      var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
+      console.log(ptgeojson);
+      o.marker      = L.geoJson(ptgeojson,{color: 'red',fillColor: '#f03',fillOpacity: 0.5}).addTo(map);
       hurricanes[o.stormid].points.push(o);
       hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
       hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
