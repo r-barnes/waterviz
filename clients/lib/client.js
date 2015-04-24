@@ -302,6 +302,7 @@ function timeChanged(newtime){
       hurricane_tracks.addLayer(o.line,true);
     });
     _.each(hurricane_tracks_raw, function(o){
+      console.log(o.mintime,newtimeunix,o.maxtime);
       if(!(o.mintime<=newtimeunix && newtimeunix<=o.maxtime))
         hurricane_tracks.removeLayer(o);
     });
