@@ -260,13 +260,13 @@ function timeChanged(newtime){
       hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
       hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
     });
-  });
-  _.each(hurricanes,function(o){
-    //if(_.has(o,'line'))
-    //  return;
-    var polyline = {type:"Feature",properties:{color:'#000',mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
-    polyline     = turf.bezier(polyline);
-    o.line       = L.geoJson(polyline).addTo(map);
+    _.each(hurricanes,function(o){
+      if(_.has(o,'line'))
+        return;
+      var polyline = {type:"Feature",properties:{color:'#000',mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
+      polyline     = turf.bezier(polyline);
+      o.line       = L.geoJson(polyline).addTo(map);
+    });
   });
 }
 
