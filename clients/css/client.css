@@ -81,7 +81,7 @@ path.highlightriver {stroke: yellow !important; }
   position:                fixed;
   left:                    0;
   bottom:                  0;
-  height:                  200px;
+  height:                  170px;
   width:                   430px;
   background-color:        rgba(0,0,255,0.5);
   border-top-right-radius: 20px;
@@ -90,4 +90,5 @@ path.highlightriver {stroke: yellow !important; }
 }
 
 .pmbutton { width:25px; height:25px; text-align:center; font-size:18px;font-weight: bold;}
+#datepanel {text-align:center;margin-bottom: 5px}
 #datepicker {text-align:center;}
