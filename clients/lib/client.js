@@ -277,8 +277,10 @@ function timeChanged(newtime){
       var polyline = {type:"Feature",properties:{mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
       polyline     = turf.bezier(polyline);
       o.line       = L.geoJson(polyline, {color:'#0033ff'});
+      o.name       = o.name.toLowerCase().replace( /\b\w/g, function (m) {return m.toUpperCase();}); //Capitalize first letter of each word
       o.line.on('mouseover',function(e){
         e.layer.setStyle({color:'yellow'});
+        $('#headerbar').html("Hurricane " + o.name)
       });
       o.line.on('mouseout',function(e){
         e.layer.setStyle({color:'#0033ff'});
