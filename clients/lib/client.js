@@ -259,56 +259,55 @@ function timeChanged(newtime){
   requestsPool.fetch('/hurricanes/'+newtime) //Prevent multiple calls to server in same session
   .done(function(data){
     var load_time = moment().unix();
-    if(!_.has(hurricanes,o.stormid)){
-      _.each(data['hurricanes'],function(o){
-        if(!_.has(hurricanes,o.stormid)){
-          hurricanes[o.stormid] = {
-            mintime:   moment('2100-01-01','YYYY-MM-DD').unix(),
-            maxtime:   moment('1800-01-01','YYYY-MM-DD').unix(),
-            points:    [],
-            load_time: load_time
-          };
-        }
-        var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
-        o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
-          return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red', color:'red'});
-        }});
-        o.marker.stormid = o.stormid;
-        o.marker.on('mouseover',function(e){
-          e.layer.setStyle({color:'black'});
-          $('#headerbar').html("Hurricane " + o.name);
-          $('#bottomright').html("Wind: "+(o.wind*1.15077945).toFixed(0)+" MPH<br>" + o.dt);
-        });
-        o.marker.on('mouseout',function(e){
-          e.layer.setStyle({color:'red'});
-        });
-        hurricane_points_raw.push(o.marker);
-        hurricane_points.addLayer(o.marker);
-        hurricanes[o.stormid].points.push(o);
-        hurricanes[o.stormid].name    = o.name;
-        hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
-        console.log(hurricanes[o.stormid].mintime);
-        hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
+    _.each(data['hurricanes'],function(o){
+      if(!_.has(hurricanes,o.stormid)){
+        hurricanes[o.stormid] = {
+          mintime:   moment('2100-01-01','YYYY-MM-DD').unix(),
+          maxtime:   moment('1800-01-01','YYYY-MM-DD').unix(),
+          points:    [],
+          load_time: load_time
+        };
+      } else if(hurricanes[o.stormid].load_time!=load_time)
+        return;
+      var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
+      o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
+        return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red', color:'red'});
+      }});
+      o.marker.stormid = o.stormid;
+      o.marker.on('mouseover',function(e){
+        e.layer.setStyle({color:'black'});
+        $('#headerbar').html("Hurricane " + o.name);
+        $('#bottomright').html("Wind: "+(o.wind*1.15077945).toFixed(0)+" MPH<br>" + o.dt);
       });
-      _.each(hurricanes,function(o){
-        if(_.has(o,'line'))
-          return;
-        var polyline      = {type:"Feature",geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
-        polyline          = turf.bezier(polyline);
-        o.line            = L.geoJson(polyline, {color:'green',weight:5});
-        o.name            = o.name.toLowerCase().replace( /\b\w/g, function (m) {return m.toUpperCase();}); //Capitalize first letter of each word
-        o.line.properties = {mintime:o.mintime,maxtime:o.maxtime};
-        o.line.on('mouseover',function(e){
-          e.layer.setStyle({color:'#A6FF00'});
-          $('#headerbar').html("Hurricane " + o.name)
-        });
-        o.line.on('mouseout',function(e){
-          e.layer.setStyle({color:'green'});
-        });
-        hurricane_tracks_raw.push(o.line);
-        hurricane_tracks.addLayer(o.line,true);
+      o.marker.on('mouseout',function(e){
+        e.layer.setStyle({color:'red'});
       });
-    }
+      hurricane_points_raw.push(o.marker);
+      hurricane_points.addLayer(o.marker);
+      hurricanes[o.stormid].points.push(o);
+      hurricanes[o.stormid].name    = o.name;
+      hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
+      console.log(hurricanes[o.stormid].mintime);
+      hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
+    });
+    _.each(hurricanes,function(o){
+      if(_.has(o,'line'))
+        return;
+      var polyline      = {type:"Feature",geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
+      polyline          = turf.bezier(polyline);
+      o.line            = L.geoJson(polyline, {color:'green',weight:5});
+      o.name            = o.name.toLowerCase().replace( /\b\w/g, function (m) {return m.toUpperCase();}); //Capitalize first letter of each word
+      o.line.properties = {mintime:o.mintime,maxtime:o.maxtime};
+      o.line.on('mouseover',function(e){
+        e.layer.setStyle({color:'#A6FF00'});
+        $('#headerbar').html("Hurricane " + o.name)
+      });
+      o.line.on('mouseout',function(e){
+        e.layer.setStyle({color:'green'});
+      });
+      hurricane_tracks_raw.push(o.line);
+      hurricane_tracks.addLayer(o.line,true);
+    });
     _.each(hurricane_tracks_raw, function(o){
       if(!(o.properties.mintime<=newtimeunix && newtimeunix<=o.properties.maxtime))
         hurricane_tracks.removeLayer(o);
