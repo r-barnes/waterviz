@@ -248,7 +248,6 @@ var hurricanes = {};
 function timeChanged(newtime){
   //Load hurricanes into a dictionary of type: dict[DATE][STORMID]
   $.getJSON('/hurricanes/'+newtime, function(data){
-    console.log(data);
     _.each(data['hurricanes'],function(o){
       if(!_.has(hurricanes,o.stormid))
         hurricanes[o.stormid] = {
@@ -263,9 +262,9 @@ function timeChanged(newtime){
     });
   });
   _.each(hurricanes,function(o){
-    if(_.has(0,'line'))
+    if(_.has(o,'line'))
       return;
-    o.line=L.polyline(_.map(o.points,function(x){return [x.lat,x.lon];})).addTo(map);
+    o.line = turf.bezier(L.polyline(_.map(o.points,function(x){return [x.lat,x.lon];})).toGeoJSON());
   });
 }
 
