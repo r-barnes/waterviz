@@ -288,10 +288,11 @@ function timeChanged(newtime){
     _.each(hurricanes,function(o){
       if(_.has(o,'line'))
         return;
-      var polyline = {type:"Feature",properties:{mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
-      polyline     = turf.bezier(polyline);
-      o.line       = L.geoJson(polyline, {color:'green',weight:5});
-      o.name       = o.name.toLowerCase().replace( /\b\w/g, function (m) {return m.toUpperCase();}); //Capitalize first letter of each word
+      var polyline      = {type:"Feature",geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
+      polyline          = turf.bezier(polyline);
+      o.line            = L.geoJson(polyline, {color:'green',weight:5});
+      o.name            = o.name.toLowerCase().replace( /\b\w/g, function (m) {return m.toUpperCase();}); //Capitalize first letter of each word
+      o.line.properties = {mintime:o.mintime,maxtime:o.maxtime}
       o.line.on('mouseover',function(e){
         e.layer.setStyle({color:'#A6FF00'});
         $('#headerbar').html("Hurricane " + o.name)
@@ -303,6 +304,7 @@ function timeChanged(newtime){
       hurricane_tracks.addLayer(o.line,true);
     });
     _.each(hurricane_tracks_raw, function(o){
+      console.log(o);
       console.log(o.mintime,newtimeunix,o.maxtime);
       if(!(o.mintime<=newtimeunix && newtimeunix<=o.maxtime))
         hurricane_tracks.removeLayer(o);
