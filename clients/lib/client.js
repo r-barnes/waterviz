@@ -277,6 +277,12 @@ function timeChanged(newtime){
       var polyline = {type:"Feature",properties:{mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
       polyline     = turf.bezier(polyline);
       o.line       = L.geoJson(polyline, {color:'#0033ff'});
+      o.line.on('mouseover',function(e){
+        e.layer.setStyle({color:'yellow'});
+      });
+      o.line.on('mouseout',function(e){
+        e.layer.setStyle({color:'#0033ff'});
+      });
       hurricane_tracks.addLayer(o.line,true);
     });
   });
@@ -310,12 +316,4 @@ $(document).ready(function(){
 
   getStations();
 
-});
-
-hurricane_tracks.on('mouseover',function(e){
-  e.layer.setStyle({color:'yellow'});
-});
-
-hurricane_tracks.on('mouseover',function(e){
-  e.layer.setStyle({color:'#0033ff'});
 });
