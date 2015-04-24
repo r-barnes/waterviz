@@ -256,15 +256,16 @@ var hurricane_tracks_raw = [];
 //TODO: Prevent multiple calls to hurricanes for the same date
 function timeChanged(newtime){
   var newtimeunix = moment(newtime,'YYYY-MM-DD').unix();
-  //Load hurricanes into a dictionary of type: dict[DATE][STORMID]
-  $.getJSON('/hurricanes/'+newtime, function(data){
+  requestsPool.fetch('/hurricanes/'+newtime) //Prevent multiple calls to server in same session
+  .done(function(data){
     _.each(data['hurricanes'],function(o){
-      if(!_.has(hurricanes,o.stormid))
-        hurricanes[o.stormid] = {
-          mintime: moment('2100-01-01','YYYY-MM-DD').unix(),
-          maxtime: moment('1800-01-01','YYYY-MM-DD').unix(),
-          points:  []
-        };
+      if(_.has(hurricanes,o.stormid))
+        return;
+      hurricanes[o.stormid] = {
+        mintime: moment('2100-01-01','YYYY-MM-DD').unix(),
+        maxtime: moment('1800-01-01','YYYY-MM-DD').unix(),
+        points:  []
+      };
       var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
         return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red', color:'red'});
