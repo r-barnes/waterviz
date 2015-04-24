@@ -266,6 +266,14 @@ function timeChanged(newtime){
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
         return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red'});
       }});
+      o.marker.on('mouseover',function(e){
+        e.layer.setStyle({color:'yellow'});
+        $('#headerbar').html("Hurricane " + o.name);
+        $('#bottomright').html("Wind: "+o.wind.toFixed(1)+"<br>Pressure: "+o.pres.toFixed(1));
+      });
+      o.marker.on('mouseout',function(e){
+        e.layer.setStyle({color:'#0033ff'});
+      });
       hurricane_points.addLayer(o.marker);
       hurricanes[o.stormid].points.push(o);
       hurricanes[o.stormid].name    = o.name;
@@ -277,14 +285,14 @@ function timeChanged(newtime){
         return;
       var polyline = {type:"Feature",properties:{mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
       polyline     = turf.bezier(polyline);
-      o.line       = L.geoJson(polyline, {color:'#0033ff'});
+      o.line       = L.geoJson(polyline, {color:'green'});
       o.name       = o.name.toLowerCase().replace( /\b\w/g, function (m) {return m.toUpperCase();}); //Capitalize first letter of each word
       o.line.on('mouseover',function(e){
-        e.layer.setStyle({color:'yellow'});
+        e.layer.setStyle({color:'#A6FF00'});
         $('#headerbar').html("Hurricane " + o.name)
       });
       o.line.on('mouseout',function(e){
-        e.layer.setStyle({color:'#0033ff'});
+        e.layer.setStyle({color:'green'});
       });
       hurricane_tracks.addLayer(o.line,true);
     });
