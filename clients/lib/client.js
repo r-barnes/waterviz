@@ -250,9 +250,12 @@ $('.nlcdgrad').hover(function(e){
   $('#nlcdexplanation').html('NLCD Legend (hover over colours for details)');
 });
 
-var hurricanes = {};
+var hurricanes           = {};
+var hurricane_points_raw = [];
+var hurricane_tracks_raw = [];
 //TODO: Prevent multiple calls to hurricanes for the same date
 function timeChanged(newtime){
+  var newtimeunix = moment(newtime,'YYYY-MM-DD').unix();
   //Load hurricanes into a dictionary of type: dict[DATE][STORMID]
   $.getJSON('/hurricanes/'+newtime, function(data){
     _.each(data['hurricanes'],function(o){
@@ -274,6 +277,7 @@ function timeChanged(newtime){
       o.marker.on('mouseout',function(e){
         e.layer.setStyle({color:'red'});
       });
+      hurricane_points_raw.push(o.marker);
       hurricane_points.addLayer(o.marker);
       hurricanes[o.stormid].points.push(o);
       hurricanes[o.stormid].name    = o.name;
@@ -294,7 +298,12 @@ function timeChanged(newtime){
       o.line.on('mouseout',function(e){
         e.layer.setStyle({color:'green'});
       });
+      hurricane_tracks_raw.push(o.line);
       hurricane_tracks.addLayer(o.line,true);
+    });
+    _.each(hurricane_tracks_raw, function(o){
+      if(!(o.mintime<=newtimeunix && newtimeunix<=o.maxtime))
+        hurricane_tracks.removeLayer(o);
     });
   });
 }
