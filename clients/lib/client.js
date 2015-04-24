@@ -274,6 +274,7 @@ function timeChanged(newtime){
         return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red', color:'red'});
       }});
       o.marker.stormid = o.stormid;
+      o.dt             = moment(o.dt,'YYYY-MM-DD').unix();
       o.marker.on('mouseover',function(e){
         e.layer.setStyle({color:'black'});
         $('#headerbar').html("Hurricane " + o.name);
@@ -316,8 +317,13 @@ function timeChanged(newtime){
     _.each(hurricane_points_raw, function(o){
       if(!(hurricanes[o.stormid].mintime<=newtimeunix && newtimeunix<=hurricanes[o.stormid].maxtime))
         hurricane_points.removeLayer(o);
-      else
+      else {
         hurricane_points.addLayer(o);
+        if(o.dt==newtimeunix)
+          o.setStyle({fillColor:'green'});
+        else
+          o.setStyle({fillColor:'red'});
+      }
     });
   });
 }
