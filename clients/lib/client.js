@@ -264,15 +264,15 @@ function timeChanged(newtime){
         };
       var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
-        return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red'});
+        return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red', color:'red'});
       }});
       o.marker.on('mouseover',function(e){
-        e.layer.setStyle({color:'yellow'});
+        e.layer.setStyle({color:'black'});
         $('#headerbar').html("Hurricane " + o.name);
-        $('#bottomright').html("Wind: "+(o.wind*1.15077945).toFixed(0)+" MPH<br>Pressure: "+(o.pres*0.000986923267).toFixed(0)+" atm");
+        $('#bottomright').html("Wind: "+(o.wind*1.15077945).toFixed(0)+" MPH");
       });
       o.marker.on('mouseout',function(e){
-        e.layer.setStyle({color:'#0033ff'});
+        e.layer.setStyle({color:'red'});
       });
       hurricane_points.addLayer(o.marker);
       hurricanes[o.stormid].points.push(o);
