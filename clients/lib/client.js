@@ -267,7 +267,8 @@ function timeChanged(newtime){
           points:    [],
           load_time: load_time
         };
-      } else if(hurricanes[o.stormid].load_time!=load_time)
+      }
+      if(hurricanes[o.stormid].load_time!=load_time)
         return;
       var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
