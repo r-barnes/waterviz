@@ -289,6 +289,7 @@ function timeChanged(newtime){
       hurricanes[o.stormid].name    = o.name;
       hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
       hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
+      console.log(hurricanes[o.stormid].maxtime);
     });
     _.each(hurricanes,function(o){
       if(_.has(o,'line'))
