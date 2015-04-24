@@ -257,7 +257,9 @@ function timeChanged(newtime){
         };
       var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
       console.log(ptgeojson);
-      o.marker      = L.geoJson(ptgeojson,{color: 'red',fillColor: '#f03',fillOpacity: 0.5}).addTo(map);
+      o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
+        return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.55, fillColor:'red'});
+      }}).addTo(map);
       hurricanes[o.stormid].points.push(o);
       hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
       hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
