@@ -161,15 +161,22 @@ map.addLayer(markers);
 
 var grad_colours = ['#b2182b','#d6604d','#f4a582','#fddbc7','#f7f7f7','#d1e5f0','#92c5de','#4393c3','#2166ac']
 
+var hurricane_tracks = L.layerGroup();
+map.addLayer(hurricane_tracks);
+var hurricane_points = L.layerGroup();
+map.addLayer(hurricane_points);
+
 var baseLayers = {
   "Terrain": basemap,
   "NLCD":    nlcdlayer,
 };
 
 var overlays = {
-  "Rivers":         riverLayer,
-  "Gauge Stations": markers,
-  "Counties":       counties
+  "Rivers":           riverLayer,
+  "Gauge Stations":   markers,
+  "Counties":         counties
+  "Hurricane Tracks": hurricane_tracks,
+  "Hurricane Points": hurricane_points
 };
 
 L.control.layers(baseLayers, overlays).addTo(map);
@@ -259,7 +266,8 @@ function timeChanged(newtime){
       console.log(ptgeojson);
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
         return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.55, fillColor:'red'});
-      }}).addTo(map);
+      }});
+      hurricane_points.addLayer(o.marker);
       hurricanes[o.stormid].points.push(o);
       hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
       hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
@@ -269,7 +277,8 @@ function timeChanged(newtime){
         return;
       var polyline = {type:"Feature",properties:{color:'#000',mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
       polyline     = turf.bezier(polyline);
-      o.line       = L.geoJson(polyline).addTo(map);
+      o.line       = L.geoJson(polyline);
+      hurricane_tracks.addLayer(o.line);
     });
   });
 }
