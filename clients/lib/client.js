@@ -1,6 +1,13 @@
 
 // Construct map, center if no location provided
-var map = L.map('map', { maxZoom: 13 } );
+var map = L.map('map', {
+  maxZoom:   13
+  //minZoom:   1,
+  /*maxBounds: [
+    [20, -125], //Southwest
+    [50,  -66]  //Northeast
+  ]*/
+});
 var hash = new L.Hash(map);
 if (!window.location.hash) {
     map.setView([37.958, -120.976], 8);
@@ -86,8 +93,8 @@ function riverClass(feature){
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
 var geojsonURL = "/rivers/{z}/{x}/{y}.json";
 var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
-  class: riverClass,
-  style: riverStyle
+  class:         riverClass,
+  style:         riverStyle,
 });
 map.addLayer(riverLayer);
 
@@ -156,15 +163,22 @@ map.addLayer(markers);
 
 var grad_colours = ['#b2182b','#d6604d','#f4a582','#fddbc7','#f7f7f7','#d1e5f0','#92c5de','#4393c3','#2166ac']
 
+var hurricane_tracks = L.featureGroup();
+map.addLayer(hurricane_tracks);
+var hurricane_points = L.featureGroup();
+map.addLayer(hurricane_points);
+
 var baseLayers = {
   "Terrain": basemap,
   "NLCD":    nlcdlayer,
 };
 
 var overlays = {
-  "Rivers":         riverLayer,
-  "Gauge Stations": markers,
-  "Counties":       counties
+  "Rivers":           riverLayer,
+  "Gauge Stations":   markers,
+  "Counties":         counties,
+  "Hurricane Tracks": hurricane_tracks,
+  "Hurricane Points": hurricane_points
 };
 
 L.control.layers(baseLayers, overlays).addTo(map);
@@ -235,8 +249,112 @@ $('.nlcdgrad').hover(function(e){
   $('#nlcdexplanation').html(classname);
 }, function(){
   $('#nlcdexplanation').html('NLCD Legend (hover over colours for details)');
-})
+});
+
+var hurricanes           = {};
+var hurricane_points_raw = [];
+var hurricane_tracks_raw = [];
+//TODO: Prevent multiple calls to hurricanes for the same date
+function timeChanged(newtime){
+  var newtimeunix = moment(newtime,'YYYY-MM-DD').unix();
+  requestsPool.fetch('/hurricanes/'+newtime) //Prevent multiple calls to server in same session
+  .done(function(data){
+    var load_time = moment().unix();
+    _.each(data['hurricanes'],function(o){
+      if(!_.has(hurricanes,o.stormid)){
+        hurricanes[o.stormid] = {
+          mintime:   moment('2100-01-01','YYYY-MM-DD').unix(),
+          maxtime:   moment('1800-01-01','YYYY-MM-DD').unix(),
+          points:    [],
+          load_time: load_time
+        };
+      } else if(hurricanes[o.stormid].load_time!=load_time)
+        return;
+      var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
+      o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
+        return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red', color:'red'});
+      }});
+      o.marker.stormid = o.stormid;
+      o.marker.dt      = moment(o.dt,'YYYY-MM-DD').unix();
+      o.marker.on('mouseover',function(e){
+        e.layer.setStyle({color:'black'});
+        $('#headerbar').html("Hurricane " + o.name);
+        $('#bottomright').html("Wind: "+(o.wind*1.15077945).toFixed(0)+" MPH<br>" + o.dt);
+      });
+      o.marker.on('mouseout',function(e){
+        e.layer.setStyle({color:'red'});
+      });
+      hurricane_points_raw.push(o.marker);
+      hurricane_points.addLayer(o.marker);
+      hurricanes[o.stormid].points.push(o);
+      hurricanes[o.stormid].name    = o.name;
+      hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
+      hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
+    });
+    _.each(hurricanes,function(o){
+      if(_.has(o,'line'))
+        return;
+      var polyline      = {type:"Feature",geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
+      polyline          = turf.bezier(polyline);
+      o.line            = L.geoJson(polyline, {color:'green',weight:5});
+      o.name            = o.name.toLowerCase().replace( /\b\w/g, function (m) {return m.toUpperCase();}); //Capitalize first letter of each word
+      o.line.properties = {mintime:o.mintime,maxtime:o.maxtime};
+      o.line.on('mouseover',function(e){
+        e.layer.setStyle({color:'#A6FF00'});
+        $('#headerbar').html("Hurricane " + o.name)
+      });
+      o.line.on('mouseout',function(e){
+        e.layer.setStyle({color:'green'});
+      });
+      hurricane_tracks_raw.push(o.line);
+      hurricane_tracks.addLayer(o.line,true);
+    });
+    _.each(hurricane_tracks_raw, function(o){
+      if(!(o.properties.mintime<=newtimeunix && newtimeunix<=o.properties.maxtime))
+        hurricane_tracks.removeLayer(o);
+      else
+        hurricane_tracks.addLayer(o);
+    });
+    _.each(hurricane_points_raw, function(o){
+      if(!(hurricanes[o.stormid].mintime<=newtimeunix && newtimeunix<=hurricanes[o.stormid].maxtime))
+        hurricane_points.removeLayer(o);
+      else {
+        hurricane_points.addLayer(o);
+        if(o.dt==newtimeunix)
+          o.setStyle({fillColor:'green'});
+        else
+          o.setStyle({fillColor:'red'});
+      }
+    });
+  });
+}
 
 $(document).ready(function(){
+  $('#datepicker').datepick({
+    minDate:    '1950-01-01',
+    maxDate:    'now',
+    dateFormat: 'yyyy-mm-dd',
+    onSelect:   function(date) { timeChanged(moment(date[0]).format('YYYY-MM-DD')); }
+  });
+
+  $('#datepicker').val(moment().format('YYYY-MM-DD'));
+
+  $('#dateminus').click(function(){
+    var dedate = moment($('#datepicker').val(), "YYYY-MM-DD");
+    dedate.add(-1, 'days');
+    if(dedate.unix()>=moment('1950-01-01').unix())
+      $('#datepicker').val( dedate.format('YYYY-MM-DD') );
+    timeChanged(dedate.format('YYYY-MM-DD'));
+  });
+
+  $('#dateplus').click(function(){
+    var dedate = moment($('#datepicker').val(), "YYYY-MM-DD");
+    dedate.add(1, 'days');
+    if(dedate.unix()<moment().unix())
+      $('#datepicker').val( dedate.format('YYYY-MM-DD') );
+    timeChanged(dedate.format('YYYY-MM-DD'));
+  });
+
   getStations();
+
 });

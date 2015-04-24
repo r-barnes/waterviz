@@ -91,7 +91,13 @@ NATURAL JOIN (SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data 
 
   return json.dumps(cur.fetchall())
 
-
+@app.route('/hurricanes/<string:date>')
+def show_hurricanes(date):
+  cur = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
+  cur.execute("""SELECT stormid, max(name) as name, to_char(DATE(iso_time), 'YYYY-MM-DD') as dt, avg(latitude) as lat, avg(longitude) as lon, max(wind) as wind, max(pres) as pres, max(windpercentile) as windp, max(prespercentile) as presp from hurricane  where track_type='main' and stormid in (select distinct stormid from hurricane where iso_time=%(time)s) GROUP BY stormid,DATE(iso_time),track_type ORDER BY stormid,dt;""", {"time":date})
+  temp = cur.fetchall()
+  print(temp)
+  return json.dumps({"hurricanes":temp})
 
 @app.route('/county/style/<string:water_code>')
 def get_mapstyle(water_code):
