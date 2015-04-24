@@ -264,7 +264,7 @@ function timeChanged(newtime){
         hurricanes[o.stormid] = {
           mintime:   moment('2100-01-01','YYYY-MM-DD').unix(),
           maxtime:   moment('1800-01-01','YYYY-MM-DD').unix(),
-          points:    []
+          points:    [],
           load_time: load_time
         };
       }
