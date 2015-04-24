@@ -264,7 +264,7 @@ function timeChanged(newtime){
         };
       var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
-        return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.55, fillColor:'red'});
+        return new L.CircleMarker(latlng, {radius: o.wind*5, fillOpacity: 0.55, fillColor:'red'});
       }});
       hurricane_points.addLayer(o.marker);
       hurricanes[o.stormid].points.push(o);
@@ -274,9 +274,9 @@ function timeChanged(newtime){
     _.each(hurricanes,function(o){
       if(_.has(o,'line'))
         return;
-      var polyline = {type:"Feature",properties:{color:'#000',mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
+      var polyline = {type:"Feature",properties:{mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
       polyline     = turf.bezier(polyline);
-      o.line       = L.geoJson(polyline);
+      o.line       = L.geoJson(polyline, {color:'#0033ff'});
       hurricane_tracks.addLayer(o.line);
     });
   });
@@ -310,4 +310,12 @@ $(document).ready(function(){
 
   getStations();
 
+});
+
+hurricane_tracks.on('mouseover',function(e){
+  e.layer.setStyle({color:'yellow'});
+});
+
+hurricane_tracks.on('mouseover',function(e){
+  e.layer.setStyle({color:'#0033ff'});
 });
