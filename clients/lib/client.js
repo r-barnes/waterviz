@@ -263,7 +263,6 @@ function timeChanged(newtime){
           points:  []
         };
       var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
-      console.log(ptgeojson);
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
         return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.55, fillColor:'red'});
       }});
