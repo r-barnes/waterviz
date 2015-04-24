@@ -174,7 +174,7 @@ var baseLayers = {
 var overlays = {
   "Rivers":           riverLayer,
   "Gauge Stations":   markers,
-  "Counties":         counties
+  "Counties":         counties,
   "Hurricane Tracks": hurricane_tracks,
   "Hurricane Points": hurricane_points
 };
