@@ -318,6 +318,7 @@ function timeChanged(newtime){
       if(!(hurricanes[o.stormid].mintime<=newtimeunix && newtimeunix<=hurricanes[o.stormid].maxtime))
         hurricane_points.removeLayer(o);
       else {
+        console.log('hi');
         hurricane_points.addLayer(o);
         if(o.dt==newtimeunix)
           o.setStyle({fillColor:'green'});
