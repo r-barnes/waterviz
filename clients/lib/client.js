@@ -250,15 +250,22 @@ function timeChanged(newtime){
   $.getJSON('/hurricanes/'+newtime, function(data){
     console.log(data);
     _.each(data['hurricanes'],function(o){
-      if(!_.has(hurricanes,o.dt)) //Don't overwrite our cache
-        hurricanes[o.dt] = {};
-      if(_.has(hurricanes[o.dt],o.stormid))
-        return;
-      console.log(o);
-      o.marker                    = L.circle([o.lat, o.lon], 500, {color: 'red',fillColor: '#f03',fillOpacity: 0.5}).addTo(map);
-      hurricanes[o.dt]            = {};
-      hurricanes[o.dt][o.stormid] = o;
+      if(!_.has(hurricanes,o.stormid))
+        hurricanes[o.stormid] = {
+          mintime: moment('2100-01-01','YYYY-MM-DD').unix(),
+          maxtime: moment('1800-01-01','YYYY-MM-DD').unix(),
+          points:  []
+        };
+      o.marker = L.circle([o.lat, o.lon], 500, {color: 'red',fillColor: '#f03',fillOpacity: 0.5}).addTo(map);
+      hurricanes[o.stormid].points.push(o);
+      hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
+      hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
     });
+  });
+  .each(hurricanes,function(o){
+    if(_.has(0,'line'))
+      return;
+    o.line=L.polyline(_.map(o.points,function(x){return [x.lat,x.lon];})).addTo(map);
   });
 }
 
