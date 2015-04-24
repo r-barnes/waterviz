@@ -269,7 +269,7 @@ function timeChanged(newtime){
       o.marker.on('mouseover',function(e){
         e.layer.setStyle({color:'yellow'});
         $('#headerbar').html("Hurricane " + o.name);
-        $('#bottomright').html("Wind: "+o.wind.toFixed(1)+"<br>Pressure: "+o.pres.toFixed(1));
+        $('#bottomright').html("Wind: "+(o.wind*1.15077945).toFixed(0)+" MPH<br>Pressure: "+(o.pres*0.000986923267).toFixed(0)+" atm");
       });
       o.marker.on('mouseout',function(e){
         e.layer.setStyle({color:'#0033ff'});
