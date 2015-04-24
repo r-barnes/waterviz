@@ -258,14 +258,18 @@ function timeChanged(newtime){
   var newtimeunix = moment(newtime,'YYYY-MM-DD').unix();
   requestsPool.fetch('/hurricanes/'+newtime) //Prevent multiple calls to server in same session
   .done(function(data){
+    var load_time = moment().unix();
     _.each(data['hurricanes'],function(o){
-      if(_.has(hurricanes,o.stormid))
+      if(!_.has(hurricanes,o.stormid)){
+        hurricanes[o.stormid] = {
+          mintime:   moment('2100-01-01','YYYY-MM-DD').unix(),
+          maxtime:   moment('1800-01-01','YYYY-MM-DD').unix(),
+          points:    []
+          load_time: load_time
+        };
+      }
+      if(hurricanes[o.stormid].load_time==load_time)
         return;
-      hurricanes[o.stormid] = {
-        mintime: moment('2100-01-01','YYYY-MM-DD').unix(),
-        maxtime: moment('1800-01-01','YYYY-MM-DD').unix(),
-        points:  []
-      };
       var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
         return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red', color:'red'});
@@ -293,7 +297,7 @@ function timeChanged(newtime){
       polyline          = turf.bezier(polyline);
       o.line            = L.geoJson(polyline, {color:'green',weight:5});
       o.name            = o.name.toLowerCase().replace( /\b\w/g, function (m) {return m.toUpperCase();}); //Capitalize first letter of each word
-      o.line.properties = {mintime:o.mintime,maxtime:o.maxtime}
+      o.line.properties = {mintime:o.mintime,maxtime:o.maxtime};
       o.line.on('mouseover',function(e){
         e.layer.setStyle({color:'#A6FF00'});
         $('#headerbar').html("Hurricane " + o.name)
