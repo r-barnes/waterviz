@@ -274,7 +274,7 @@ function timeChanged(newtime){
         return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red', color:'red'});
       }});
       o.marker.stormid = o.stormid;
-      o.dt             = moment(o.dt,'YYYY-MM-DD').unix();
+      o.marker.dt      = moment(o.dt,'YYYY-MM-DD').unix();
       o.marker.on('mouseover',function(e){
         e.layer.setStyle({color:'black'});
         $('#headerbar').html("Hurricane " + o.name);
@@ -289,7 +289,6 @@ function timeChanged(newtime){
       hurricanes[o.stormid].name    = o.name;
       hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
       hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
-      console.log(hurricanes[o.stormid].maxtime);
     });
     _.each(hurricanes,function(o){
       if(_.has(o,'line'))
@@ -310,7 +309,6 @@ function timeChanged(newtime){
       hurricane_tracks.addLayer(o.line,true);
     });
     _.each(hurricane_tracks_raw, function(o){
-      console.log(o.properties.mintime,newtimeunix,o.properties.maxtime);
       if(!(o.properties.mintime<=newtimeunix && newtimeunix<=o.properties.maxtime))
         hurricane_tracks.removeLayer(o);
       else
@@ -320,7 +318,6 @@ function timeChanged(newtime){
       if(!(hurricanes[o.stormid].mintime<=newtimeunix && newtimeunix<=hurricanes[o.stormid].maxtime))
         hurricane_points.removeLayer(o);
       else {
-        console.log('hi');
         hurricane_points.addLayer(o);
         if(o.dt==newtimeunix)
           o.setStyle({fillColor:'green'});
