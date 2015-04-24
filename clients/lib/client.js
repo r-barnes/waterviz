@@ -285,7 +285,7 @@ function timeChanged(newtime){
         return;
       var polyline = {type:"Feature",properties:{mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
       polyline     = turf.bezier(polyline);
-      o.line       = L.geoJson(polyline, {color:'green'});
+      o.line       = L.geoJson(polyline, {color:'green',weight:5});
       o.name       = o.name.toLowerCase().replace( /\b\w/g, function (m) {return m.toUpperCase();}); //Capitalize first letter of each word
       o.line.on('mouseover',function(e){
         e.layer.setStyle({color:'#A6FF00'});
