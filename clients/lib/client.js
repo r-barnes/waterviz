@@ -277,7 +277,7 @@ function timeChanged(newtime){
       var polyline = {type:"Feature",properties:{mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
       polyline     = turf.bezier(polyline);
       o.line       = L.geoJson(polyline, {color:'#0033ff'});
-      hurricane_tracks.addLayer(o.line);
+      hurricane_tracks.addLayer(o.line,true);
     });
   });
 }
