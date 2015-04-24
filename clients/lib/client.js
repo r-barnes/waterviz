@@ -274,6 +274,7 @@ function timeChanged(newtime){
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
         return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red', color:'red'});
       }});
+      o.marker.stormid = o.stormid;
       o.marker.on('mouseover',function(e){
         e.layer.setStyle({color:'black'});
         $('#headerbar').html("Hurricane " + o.name);
@@ -311,6 +312,14 @@ function timeChanged(newtime){
     _.each(hurricane_tracks_raw, function(o){
       if(!(o.properties.mintime<=newtimeunix && newtimeunix<=o.properties.maxtime))
         hurricane_tracks.removeLayer(o);
+      else
+        hurricane_tracks.addLayer(o);
+    });
+    _.each(hurricane_points_raw, function(o){
+      if(!(hurricanes[o.stormid].mintime<=newtimeunix && newtimeunix<=hurricanes[o.stormid].maxtime))
+        hurricane_points.removeLayer(o);
+      else
+        hurricane_points.addLayer(o);
     });
   });
 }
