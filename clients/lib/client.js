@@ -262,7 +262,7 @@ function timeChanged(newtime){
       hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
     });
   });
-  .each(hurricanes,function(o){
+  _.each(hurricanes,function(o){
     if(_.has(0,'line'))
       return;
     o.line=L.polyline(_.map(o.points,function(x){return [x.lat,x.lon];})).addTo(map);
