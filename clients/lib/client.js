@@ -291,10 +291,8 @@ function timeChanged(newtime){
       hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
     });
     _.each(hurricanes,function(o){
-      console.log('hi');
       if(_.has(o,'line'))
         return;
-      console.log('bye');
       var polyline      = {type:"Feature",geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
       polyline          = turf.bezier(polyline);
       o.line            = L.geoJson(polyline, {color:'green',weight:5});
@@ -311,6 +309,7 @@ function timeChanged(newtime){
       hurricane_tracks.addLayer(o.line,true);
     });
     _.each(hurricane_tracks_raw, function(o){
+      console.log(o.properties.mintime,newtimeunix,o.properties.maxtime);
       if(!(o.properties.mintime<=newtimeunix && newtimeunix<=o.properties.maxtime))
         hurricane_tracks.removeLayer(o);
       else
