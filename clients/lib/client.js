@@ -264,7 +264,7 @@ function timeChanged(newtime){
         };
       var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
-        return new L.CircleMarker(latlng, {radius: o.wind/20, fillOpacity: 0.55, fillColor:'red'});
+        return new L.CircleMarker(latlng, {radius: o.wind/15, fillOpacity: 0.55, fillColor:'red'});
       }});
       hurricane_points.addLayer(o.marker);
       hurricanes[o.stormid].points.push(o);
