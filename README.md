@@ -6,11 +6,11 @@ See the [live map](http://waterviz.com) and [the source code](https://github.com
 
 ## Introduction
 
-WaterViz aims to provide a high-level view of water availability and factors affecting its quantity and quality by providing a visual overview of real-time river conditions in the conterminous United States. All U.S. rivers and all active U.S. gauge stations are colored and sized based on how their current discharge rate ranks against a thirty year history. Optionally, current land use can be displayed, as well as an analysis of how land use has changed in proximity to water.
+WaterViz aims to provide a high-level view of water availability and factors affecting its quantity and quality by providing a visual overview of real-time river conditions in the conterminous United States. All U.S. rivers and all active U.S. gauge stations are colored and sized based on how their current discharge rate ranks against a thirty year history. Optionally, current land use can be displayed, as well as an analysis of how land use has changed in proximity to water. Historic hurricane tracks are provided to better explain river surges due to high rain volumes.
 
 ## Details
 
-[WaterViz.com](http://waterviz.com) aims to provide an intuitive view of the current state of water in the conterminous United States. To do so, it presents all of the relevant information in a mapped form.
+[WaterViz.com](http://waterviz.com) aims to provide an intuitive view of the current and historic state of water in the conterminous United States. To do so, it presents all of the relevant information in a mapped form.
 
 A walk-through video is [here](https://youtu.be/ve2Zm53DyQM) and a video showing how WaterViz.com can be used to facilitate analysis is [here](https://youtu.be/VW811vI6DvQ).
 
@@ -27,6 +27,8 @@ To facilitate understanding of the relationships between land-use and water, the
 This information is displayed on a per-county basis (using the [Census TIGER/Line files](http://www2.census.gov/geo/tiger/GENZ2013/cb_2013_us_county_5m.zip)) where counties are coloured from white to deep red depending on how much near-shore development they have incurred.
 
 Put another way, the foregoing provides an analysis of riparian buffer zones. The lack of such zones has much to do with poor water quality and dead zones downstream and policy action to expand buffer zone size and quantity has become a [hot topic](http://www.startribune.com/lifestyle/health/299464721.html) recently.
+
+Hurricane data has been overlaid in order to facilitate understanding of the causes for high water volumes.
 
 Future improvements to the project include optimizing server-side database queries and caching. While the project is set up to update data in real-time, updating has been disabled for the next couple of weeks as a proof-of-concept to ensure speedy performance. Additionally improvements will be made to the user interface to facilitate deeper exploration of the data.
 
@@ -70,12 +72,15 @@ Technical details are available on the project's [GitHub page](https://github.co
 3. [Underscore.js](http://underscorejs.org/): A JS functional programming library
 4. [jQuery](https://jquery.com/): A library for expediting JS DOM manipulations
 5. [jquery DatePicker](http://keith-wood.name/datepick.HTML): A light-weight JS date picker
+6. [Moment.js](http://momentjs.com/): For handling time
+7. [Turf.js](http://turfjs.org/): Makes hurricane tracks smooth with bezier curves
 
 ## Data Sources
 1. [NHDPlus](http://www.horizon-systems.com/nhdplus/): Source for river flowlines, gauge locations, gauge information, and gauge history
 2. [NLCD 2011](http://www.mrlc.gov/nlcd2011.php): Source for the land use information
 3. [Census TIGER/Line](http://www2.census.gov/geo/tiger/GENZ2013/cb_2013_us_county_5m.zip): Source for county outlines
 4. [National Water Information System](http://waterdata.usgs.gov/nwis/rt): Source of real-time hydrography data
+5. [IBTrACS-WMO Hurricane Data](https://www.ncdc.noaa.gov/ibtracs/index.php?name=wmo-data): Source of historic hurricane tracks and windspeeds
 
 ## Getting started
 
