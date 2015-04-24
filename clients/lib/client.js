@@ -260,6 +260,7 @@ function timeChanged(newtime){
   .done(function(data){
     var load_time = moment().unix();
     _.each(data['hurricanes'],function(o){
+      console.log('here');
       if(!_.has(hurricanes,o.stormid)){
         hurricanes[o.stormid] = {
           mintime:   moment('2100-01-01','YYYY-MM-DD').unix(),
@@ -267,9 +268,9 @@ function timeChanged(newtime){
           points:    [],
           load_time: load_time
         };
-      }
-      if(hurricanes[o.stormid].load_time!=load_time)
+      } else if(hurricanes[o.stormid].load_time!=load_time)
         return;
+      console.log('hello');
       var ptgeojson = {type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}};
       o.marker      = L.geoJson(ptgeojson,{pointToLayer: function (feature, latlng) {
         return new L.CircleMarker(latlng, {radius: o.wind/5, fillOpacity: 0.55, fillColor:'red', color:'red'});
