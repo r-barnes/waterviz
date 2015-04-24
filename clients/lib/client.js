@@ -255,16 +255,18 @@ function timeChanged(newtime){
           maxtime: moment('1800-01-01','YYYY-MM-DD').unix(),
           points:  []
         };
-      o.marker = L.circle([o.lat, o.lon], 500, {color: 'red',fillColor: '#f03',fillOpacity: 0.5}).addTo(map);
+      o.marker = L.geoJson({type:"Feature",properties:o,geometry:{type:"Point",coordinates:[o.lon,o.lat]}}, {color: 'red',fillColor: '#f03',fillOpacity: 0.5});
       hurricanes[o.stormid].points.push(o);
       hurricanes[o.stormid].mintime = Math.min(hurricanes[o.stormid].mintime, moment(o.dt,'YYYY-MM-DD').unix());
       hurricanes[o.stormid].maxtime = Math.max(hurricanes[o.stormid].maxtime, moment(o.dt,'YYYY-MM-DD').unix());
     });
   });
   _.each(hurricanes,function(o){
-    if(_.has(o,'line'))
-      return;
-    o.line = turf.bezier(L.polyline(_.map(o.points,function(x){return [x.lat,x.lon];})).toGeoJSON());
+    //if(_.has(o,'line'))
+    //  return;
+    var polyline = {type:"Feature",properties:{color:'#000',mintime:o.mintime,maxtime:o.maxtime},geometry:{type:"LineString", coordinates:_.map(o.points,function(x){return [x.lon,x.lat];})}};
+    polyline     = turf.bezier(polyline);
+    o.line       = L.geoJson(polyline).addTo(map);
   });
 }
 
