@@ -69,7 +69,6 @@ var requestsPool = {
 function UpdateRivers(newtime){
   requestsPool.fetch('/gauges/reachflow/'+newtime)
   .done(function(val){
-    console.log(val);
     _.each(val['reachflows'],function(o){
       $('.h'+o.huc8).css('stroke',       (o.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*o.drank/100.0)]:'#FF00DE' );
       $('.h'+o.huc8).css('stroke-width', ((o.drank!==null)?(6*o.drank/100.0+2).toString():'2')+'px' );
