@@ -66,3 +66,11 @@ for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
     continue
   else:
     conn.commit()
+
+
+print "Generating reach summaries"
+cur.execute("select substring(reachcode from 0 for 9) as reachcode, array_to_string(array_agg(source_fea), ',') as gaugecodes from gageloc group by substring(reachcode from 0 for 9);")
+rows = cur.fetchall()
+for i,row in enumerate(rows):
+  print("Working on %s (%d of %d)" % (row['reachcode'],i+1,len(rows)))
+  cur.execute("INSERT INTO reach_summary SELECT %(reachcode)s as reachcode, AVG(dvalue) as dvalue, AVG(svalue) as svalue, AVG(drank) as drank, jday FROM gauge_summary WHERE site_code IN %(gauges)s GROUP BY jday ORDER BY jday")
