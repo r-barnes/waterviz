@@ -21,7 +21,10 @@ for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
   print ("Working on '%s' (%d of %d)" % (fname,i+1,filecount))
   fin = open(fname,'r')
   fin = csv.DictReader((row for row in fin if not row.startswith('#')),dialect='excel-tab',delimiter='\t',skipinitialspace=True)
-  fin.next() #Skip units line
+  try:
+    fin.next() #Skip units line
+  except:
+    continue
 
   data = list(fin)
 
