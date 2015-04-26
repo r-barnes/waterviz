@@ -45,10 +45,24 @@ L.TileLayer.d3_geoJSON =  L.TileLayer.extend({
                     .on("mouseover", function(x) {
                         $('#headerbar').html(x.properties.name);
                         d3.select(d3.event.target).classed("highlightriver", true);
+                        if(!x.properties.svalue)
+                            x.properties.svalue = "??";
+                        else
+                            x.properties.svalue = x.properties.svalue.toFixed(1);
+
+                        if(!x.properties.dvalue)
+                            x.properties.dvalue = "??";
+                        else
+                            x.properties.dvalue = x.properties.dvalue.toFixed(1);
+
+                        if(!x.properties.drank)
+                            x.properties.drank = "??";
+                        else
+                            x.properties.drank = x.properties.drank.toFixed(1);
                         $('#bottomright').html(
-                          'Avg Stage: '     + x.properties.svalue.toFixed(1) + ' ft<br>' +
-                          'Avg Discharge: ' + x.properties.dvalue.toFixed(1) + ' cfs<br>' +
-                          'Avg Rank: '      + x.properties.drank.toFixed(0) + '%'
+                          'Avg Stage: '     + x.properties.svalue + ' ft<br>' +
+                          'Avg Discharge: ' + x.properties.dvalue + ' cfs<br>' +
+                          'Avg Rank: '      + x.properties.drank + '%'
                         );
                     })
                     .on("mouseout",  function(x) { d3.select(d3.event.target).classed("highlightriver", false); });
