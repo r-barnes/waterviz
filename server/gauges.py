@@ -57,7 +57,7 @@ SELECT site_code,
       svalue,
       dvalue,
       drank,
-      featuredet,
+      featuredet
 FROM (SELECT source_fea AS site_code, ST_X(geom) as lng, ST_Y(geom) as lat, featuredet
         FROM   gageloc
         WHERE  geom
