@@ -75,9 +75,12 @@ for i,row in enumerate(rows):
   print("Working on %s (%d of %d)" % (row['reachcode'],i+1,len(rows)))
   row['gaugecodes'] = ','.join(map(lambda x: "'"+x+"'", row['gaugecodes'].split(',')))
   try:
-    cur.execute("INSERT INTO reach_summary SELECT %(reachcode)s as reachcode, AVG(dvalue) as dvalue, AVG(svalue) as svalue, AVG(drank) as drank, jday FROM gauge_summary WHERE site_code IN (%(gaugecodes)s) GROUP BY jday ORDER BY jday", row)
+    cur.execute("INSERT INTO reach_summary SELECT %(reachcode)s as reachcode, AVG(dvalue) as dvalue, AVG(svalue) as svalue, AVG(drank) as drank, jday FROM gauge_summary WHERE site_code IN ("+row['gaugecodes']+") GROUP BY jday ORDER BY jday", row)
+    if cur.rowcount==0:
+      print "Inserted no rows!"
   except psycopg2.IntegrityError:
     conn.rollback()
     print "Duplicate key."
   else:
+    print "Committing"
     conn.commit()
