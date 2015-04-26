@@ -82,17 +82,16 @@ function UpdateRivers(newtime){
   });
 }
 
-function UpdateGauges(newtime){
-  requestsPool.fetch('/gauges/getvals/'+newtime,{gauges:JSON.stringify(gauge_list)},'post')
+/*function UpdateGauges(newtime){
+  requestsPool.fetch('/gauges/getvals/'+newtime,{gauges:JSON.stringify(_.keys(gauges))},'post')
   .done(function(val){
-    console.log(val);
-    /*_.each(val['reachflows'],function(o){
-      $('.h'+o.huc8).css('stroke',       (o.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*o.drank/100.0)]:'#FF00DE' );
-      $('.h'+o.huc8).css('stroke-width', ((o.drank!==null)?(6*o.drank/100.0+2).toString():'2')+'px' );
-    });*/
+    _.each(val,function(o){
+      gauges[val.site_code.trim()].setStyle('')
+
+    });
   });
 }
-UpdateGauges('2010-08-08');
+UpdateGauges('2010-08-08');*/
 
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
@@ -198,25 +197,27 @@ var overlays = {
 
 L.control.layers(baseLayers, overlays).addTo(map);
 
-var gauge_list = [];
+var gauges = {};
 function getStations() {
   // Clear markers before getting new ones
   markers.clearLayers();
 
+  var date = $('#datepicker').val();
+
   // Get map bounds from Leaflet.  getBounds() returns an object
   var bbox = map.getBounds();
 
-  var addy = "/gauges/list/xmin/ymin/xmax/ymax";
+  var addy = "/gauges/list/date/xmin/ymin/xmax/ymax";
+  addy     = addy.replace("date",date);
   addy     = addy.replace("xmin",bbox._southWest.lng);
   addy     = addy.replace("ymin",bbox._southWest.lat);
   addy     = addy.replace("xmax",bbox._northEast.lng);
   addy     = addy.replace("ymax",bbox._northEast.lat);
 
   $.getJSON(addy, function(data) {
-    gauge_list = [];
+    gauges = {};
     _.each(data, function(marker){
-      gauge_list.push(marker.site_code);
-      var markerItem = L.circleMarker(
+      gauges[marker.site_code] = L.circleMarker(
         [marker.lat,marker.lng],
         {
           radius:      5,
@@ -225,13 +226,11 @@ function getStations() {
           fillOpacity: 1
         }
       );
-      markerItem.on('mouseover', function(){
+      gauges[marker.site_code].on('mouseover', function(){
         $('#headerbar').html(marker.name);
         $('#bottomright').html(
           'Stage: ' + marker.svalue + ' ft<br>' +
-          '<span class="ddate">'+marker.sdt+'</span><br>' +
           'Discharge: ' + marker.dvalue + ' cfs<br>' +
-          '<span class="ddate">'+marker.ddt+'</span><br>' +
           'Rank: ' + marker.drank.toFixed(2) + '<br>' +
           'More info <a href="'+marker.featuredet+'">here</a>'
           );
