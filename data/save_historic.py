@@ -38,6 +38,8 @@ for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
   for i in data:
     if key60: #Discharge
       i['dvalue'] = i[key60[0]]
+      if not i['dvalue']: #Filter empty strings
+        i['dvalue'] = None
       if i['site_no'] in historic_data:
         i['drank'] = scipy.stats.percentileofscore(historic_data[i['site_no']],i['dvalue'])
       else:
@@ -47,6 +49,8 @@ for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
       i['drank']  = None
     if key65: #Stage
       i['svalue'] = i[key65[0]]
+      if not i['svalue']: #Filter empty strings
+        i['svalue'] = None
     else:
       i['svalue'] = None
 
