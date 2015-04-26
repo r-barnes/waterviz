@@ -168,7 +168,6 @@ cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_summary
 #cur.executemany("""INSERT INTO tmp(huc8,dvalue,svalue,drank,jday) VALUES (%(huc8)s, %(dvalue)s, %(svalue)s, %(drank)s, now()::date-'1970-01-01'::date)""", agg_reach_data)
 
 #Convert agg_reach_data into a list suitable for mass insertion into the db
-agg_reach_data = [v for k,v in agg_reach_data.iteritems()]
 agg_gauge_data = [v for k,v in agg_gauge_data.iteritems()]
 
 cur.executemany("""
