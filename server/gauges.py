@@ -36,7 +36,7 @@ def show_reachflow(date):
 @app.route('/gauges/getvals/<string:date>', methods=['POST'])
 def show_getvals(date):
   cur         = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
-  gaugelist   = JSON.parse(request.form['gauages'])
+  gaugelist   = json.loads(request.form['gauages'])
   non_decimal = re.compile(r'[^\d]+')
   gaugelist   = filter(lambda x: non_decimal.match(x), gaugelist)
   gaugelist   = map(lambda x: "'"+x+"'", gaugelist)
