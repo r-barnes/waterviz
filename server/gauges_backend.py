@@ -103,9 +103,8 @@ def getData(state):
 
   for s in resp['value']['timeSeries']:
     if len(s['variable']['variableCode'])>1:
+      print s['variable']['variableCode']
       print "More variables!"
-    if len(s['values'][0]['value'])>1:
-      print "More values!"
     if len(s['sourceInfo']['siteCode'])>1:
       print "More sites!"
     try:
