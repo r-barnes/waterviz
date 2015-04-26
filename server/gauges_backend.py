@@ -193,7 +193,7 @@ WHERE NOT EXISTS (SELECT 1
                   WHERE up.site_code = new_values.site_code AND up.jday = new_values.jday)
 """, agg_gauge_data)
 
-
+conn.commit()
 
 
 
