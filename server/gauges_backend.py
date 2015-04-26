@@ -93,7 +93,8 @@ agg_gauge_data = {}
 def getData(state):
   print("Gathering data for %s" % (state))
   url     = "http://waterservices.usgs.gov/nwis/iv/"
-  options = {"format":"json","stateCd":state,"parameterCd":"00060,00065","siteStatus":"active","startDT":'2011-04-28','endDT':'2011-04-28'}
+  #options = {"format":"json","stateCd":state,"parameterCd":"00060,00065","siteStatus":"active","startDT":'2011-04-28','endDT':'2011-09-09'}
+  options = {"format":"json","stateCd":state,"parameterCd":"00060,00065","siteStatus":"active"}
   resp    = requests.get(url,params=options)
   if resp.status_code!=200:
     pass
