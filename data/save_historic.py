@@ -57,26 +57,10 @@ for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
     else:
       i['svalue'] = None
 
-  cur.executemany("""
-WITH new_values (site_code,dvalue,svalue,drank,jday) AS (
-  VALUES (%(site_no)s, CAST(%(dvalue)s AS REAL), CAST(%(svalue)s AS REAL), CAST(%(drank)s AS REAL), %(datetime)s::date-'1970-01-01'::date)
-),
-upsert AS
-(
-    UPDATE gauge_summary m
-        SET dvalue = GREATEST(m.dvalue,nv.dvalue),
-            svalue = GREATEST(m.svalue,nv.svalue),
-            drank  = GREATEST(m.drank, nv.drank )
-    FROM new_values nv
-    WHERE m.site_code = nv.site_code AND m.jday=nv.jday
-    RETURNING m.*
-)
-INSERT INTO gauge_summary (site_code,dvalue,svalue,drank,jday)
-SELECT site_code,dvalue,svalue,drank,jday
-FROM new_values
-WHERE NOT EXISTS (SELECT 1
-                  FROM upsert up
-                  WHERE up.site_code = new_values.site_code AND up.jday = new_values.jday)
-""", data)
+  try:
+    cur.executemany("""INSERT INTO gauge_summary (site_code,dvalue,svalue,drank,jday) VALUES (%(site_no)s, CAST(%(dvalue)s AS REAL), CAST(%(svalue)s AS REAL), CAST(%(drank)s AS REAL), %(datetime)s::date-'1970-01-01'::date)""")
+  except:
+    conn.rollback()
+    continue
 
   conn.commit()
