@@ -41,7 +41,7 @@ def show_gaugelist(date):
   gaugelist   = filter(lambda x: non_decimal.match(x), gaugelist)
   gaugelist   = map(lambda x: "'"+x+"'", gaugelist)
   gaugelist   = ','.join(gaugelist)
-  print gaugelist
+  print(gaugelist)
   cur.execute("SELECT * FROM gauge_summary WHERE site_code IN ("+gaugelist+") AND jday=%(date)s::date-'1970-01-01'::date")
   return json.dumps({"gaugevals":cur.fetchall()})
 
