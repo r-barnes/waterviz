@@ -27,31 +27,10 @@ def teardown_request(exception):
 #  return send_from_directory('.', 'index.html')
 
 @app.route('/gauges/reachflow/<string:huc8>', methods=['GET'])
-def show_reachflow(huc8):
+def show_reachflow(date):
   cur = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
-
-  huc8+='%'
-
-  cur.execute("""
-SELECT avg(dvalue) as dvalue, avg(svalue) as svalue, avg(drank) as drank, to_char(min(sdt), 'YYYY-MM-DD HH24:MI') as sdt, to_char(min(ddt), 'YYYY-MM-DD HH24:MI') as ddt FROM (
-    SELECT a.site_code,a.dt as sdt, a.value as svalue FROM gauge_data AS a
-    JOIN (
-      SELECT site_code, variable, max(dt) maxDate FROM gauge_data GROUP BY site_code,variable) b
-    ON a.site_code = b.site_code AND a.variable='S' AND a.variable=b.variable AND a.dt = b.maxDate) as d
-    NATURAL JOIN (
-      SELECT a.site_code,a.dt as ddt, a.value as dvalue,
-      (SELECT percent_rank(a.value) WITHIN GROUP (ORDER BY ave ASC) as drank
-         FROM gage_smooth
-         WHERE month=13 and year>=1985 and site_no=a.site_code
-         GROUP BY site_no
-      ) as drank
-      FROM gauge_data AS a
-      JOIN (SELECT site_code, variable, max(dt) maxDate FROM gauge_data GROUP BY site_code,variable) b
-      ON a.site_code = b.site_code AND a.variable='D' AND a.variable=b.variable AND a.dt = b.maxDate) AS e
-WHERE site_code IN (SELECT source_fea FROM gageloc WHERE reachcode LIKE %(huc8)s)
-""", {"huc8":huc8})
-
-  return json.dumps(cur.fetchall()[0])
+  cur.execute("SELECT * FROM reach_summary WHERE jday=%(date)s::date-'1970-01-01'::date", {"date":date})
+  return json.dumps(cur.fetchall())
 
 
 
