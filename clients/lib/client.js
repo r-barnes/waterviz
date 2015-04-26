@@ -242,7 +242,7 @@ function getStations() {
       //   + ((marker.incident_address != null) ? '<br/>' + marker.incident_address : '')
       // );
 
-      markers.addLayer(markerItem);
+      markers.addLayer(gauges[marker.site_code]);
     });
   });
 }
