@@ -28,8 +28,8 @@ for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
   if not data:
     continue
 
-  key60 = filter(data[0].keys(), lambda x: x.endswith('_00060_00003'))
-  key65 = filter(data[0].keys(), lambda x: x.endswith('_00065_00003'))
+  key60 = filter(lambda x: x.endswith('_00060_00003'), data[0].keys())
+  key65 = filter(lambda x: x.endswith('_00065_00003'), data[0].keys())
 
   if not key60 and not key65:
     print ('%s had no discharge or stage.' % (fname))
