@@ -43,7 +43,8 @@ for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
       i['dvalue'] = i[key60[0]]
       if not i['dvalue'] or not i['dvalue'].isdigit(): #Filter empty strings
         i['dvalue'] = None
-      if i['site_no'] in historic_data:
+        i['drank']  = None
+      elif i['site_no'] in historic_data:
         i['drank'] = scipy.stats.percentileofscore(historic_data[i['site_no']],i['dvalue'])
       else:
         i['drank'] = None
