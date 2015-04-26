@@ -111,9 +111,6 @@ var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
   style:         riverStyle,
 });
 map.addLayer(riverLayer);
-riverLayer.on('load',function(){
-  console.log('Rivers done loading.');
-});
 
 var countystyle = {
   "color":       "black",
@@ -169,10 +166,12 @@ setTimeout(function(){colourCounties('allwater',95);},1000*5);
 map.on('dragend', function(e) {
   //$('#spinnerBox').fadeIn();
   getStations();
+  setTimeout(function(){UpdateRivers($('#datepicker').val());},2000);
 });
 
 map.on('zoomend', function() {
   getStations();
+  setTimeout(function(){UpdateRivers($('#datepicker').val());},2000);
 });
 
 var markers = new L.FeatureGroup();
