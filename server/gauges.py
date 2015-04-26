@@ -26,7 +26,7 @@ def teardown_request(exception):
 #def index():
 #  return send_from_directory('.', 'index.html')
 
-@app.route('/gauges/reachflow/<string:huc8>', methods=['GET'])
+@app.route('/gauges/reachflow/<string:date>', methods=['GET'])
 def show_reachflow(date):
   cur = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
   cur.execute("SELECT * FROM reach_summary WHERE jday=%(date)s::date-'1970-01-01'::date", {"date":date})
