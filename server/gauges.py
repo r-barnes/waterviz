@@ -6,6 +6,7 @@ import psycopg2.extras
 import json
 import pickle
 import numpy as np
+import re
 
 app = Flask(__name__)
 
@@ -32,7 +33,17 @@ def show_reachflow(date):
   cur.execute("SELECT * FROM reach_summary WHERE jday=%(date)s::date-'1970-01-01'::date", {"date":date})
   return json.dumps({"reachflows":cur.fetchall()})
 
-
+@app.route('/gauges/getvals/<string:date>', methods=['POST'])
+def show_gaugelist(date):
+  cur         = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
+  gaugelist   = JSON.parse(request.form['gauages'])
+  non_decimal = re.compile(r'[^\d]+')
+  gaugelist   = filter(lambda x: non_decimal.match(x), gaugelist)
+  gaugelist   = map(lambda x: "'"+x+"'", gaugelist)
+  gaugelist   = ','.join(gaugelist)
+  print gaugelist
+  cur.execute("SELECT * FROM gauge_summary WHERE site_code IN ("+gaugelist+") AND jday=%(date)s::date-'1970-01-01'::date")
+  return json.dumps({"gaugevals":cur.fetchall()})
 
 @app.route('/gauges/list/<string:xmin>/<string:ymin>/<string:xmax>/<string:ymax>', methods=['GET'])
 def show_gaugelist(xmin,ymin,xmax,ymax):
