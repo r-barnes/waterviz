@@ -73,4 +73,11 @@ cur.execute("select substring(reachcode from 0 for 9) as reachcode, array_to_str
 rows = cur.fetchall()
 for i,row in enumerate(rows):
   print("Working on %s (%d of %d)" % (row['reachcode'],i+1,len(rows)))
-  cur.execute("INSERT INTO reach_summary SELECT %(reachcode)s as reachcode, AVG(dvalue) as dvalue, AVG(svalue) as svalue, AVG(drank) as drank, jday FROM gauge_summary WHERE site_code IN %(gauges)s GROUP BY jday ORDER BY jday")
+  row['gaugecodes'] = ','.join(map(lambda x: "'"+x+"'", row['gaugecodes'].split(',')))
+  try:
+    cur.execute("INSERT INTO reach_summary SELECT %(reachcode)s as reachcode, AVG(dvalue) as dvalue, AVG(svalue) as svalue, AVG(drank) as drank, jday FROM gauge_summary WHERE site_code IN (%(gaugecodes)s) GROUP BY jday ORDER BY jday", row)
+  except psycopg2.IntegrityError:
+    conn.rollback()
+    print "Duplicate key."
+  else:
+    conn.commit()
