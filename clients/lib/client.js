@@ -110,10 +110,10 @@ var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
   class:         riverClass,
   style:         riverStyle,
 });
+map.addLayer(riverLayer);
 riverLayer.on('load',function(){
   console.log('Rivers done loading.');
 });
-map.addLayer(riverLayer);
 
 var countystyle = {
   "color":       "black",
