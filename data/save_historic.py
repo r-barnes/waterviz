@@ -60,6 +60,7 @@ for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
   try:
     cur.executemany("""INSERT INTO gauge_summary (site_code,dvalue,svalue,drank,jday) VALUES (%(site_no)s, CAST(%(dvalue)s AS REAL), CAST(%(svalue)s AS REAL), CAST(%(drank)s AS REAL), %(datetime)s::date-'1970-01-01'::date)""")
   except:
+    print("Failed to insert for %s" % (fname))
     conn.rollback()
     continue
 
