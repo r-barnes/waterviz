@@ -4,6 +4,7 @@ import csv
 import psycopg2
 import psycopg2.extras
 import scipy.stats
+import numpy as np
 
 conn = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password='NONE'")
 cur  = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
