@@ -38,7 +38,7 @@ var requestsPool = {
   requests: {}, //list of urls
   timeouts: {},
   timeout:  1000*60*10, //In milliseconds
-  fetch: function(url) {
+  fetch: function(url, data) {
     if(requestsPool.exists(url))
       return requestsPool.requests[url];
 
@@ -46,7 +46,10 @@ var requestsPool = {
         requestsPool.remove(u);
     }.bind(this, url), requestsPool.timeout); //Defining the timeout
 
-    requestsPool.requests[url] = $.getJSON(url);
+    if(data)
+      requestsPool.requests[url] = $.getJSON(url,data);
+    else
+      requestsPool.requests[url] = $.getJSON(url);
     return requestsPool.requests[url];
   },
   exists: function(url) {
@@ -73,6 +76,17 @@ function UpdateRivers(newtime){
       $('.h'+o.huc8).css('stroke',       (o.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*o.drank/100.0)]:'#FF00DE' );
       $('.h'+o.huc8).css('stroke-width', ((o.drank!==null)?(6*o.drank/100.0+2).toString():'2')+'px' );
     });
+  });
+}
+
+function UpdateGauges(newtime){
+  requestsPool.fetch('/gauges/getvals/'+newtime,{gauges:JSON.stringify(gauge_list)})
+  .done(function(val){
+    console.log(val);
+    /*_.each(val['reachflows'],function(o){
+      $('.h'+o.huc8).css('stroke',       (o.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*o.drank/100.0)]:'#FF00DE' );
+      $('.h'+o.huc8).css('stroke-width', ((o.drank!==null)?(6*o.drank/100.0+2).toString():'2')+'px' );
+    });*/
   });
 }
 
@@ -180,7 +194,7 @@ var overlays = {
 
 L.control.layers(baseLayers, overlays).addTo(map);
 
-
+var gauge_list = [];
 function getStations() {
   // Clear markers before getting new ones
   markers.clearLayers();
@@ -194,10 +208,10 @@ function getStations() {
   addy     = addy.replace("xmax",bbox._northEast.lng);
   addy     = addy.replace("ymax",bbox._northEast.lat);
 
-  //use jQuery's getJSON() to call the SODA API for NYC 311
   $.getJSON(addy, function(data) {
-    //iterate over each 311 complaint, add a marker to the map
+    gauge_list = [];
     _.each(data, function(marker){
+      gauge_list.push(marker.site_code);
       var markerItem = L.circleMarker(
         [marker.lat,marker.lng],
         {
