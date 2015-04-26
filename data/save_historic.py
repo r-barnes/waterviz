@@ -14,10 +14,10 @@ for i in cur.fetchall():
   temp = np.fromstring(i['yearly_ave'], dtype=float, sep=',')
   historic_data[i['site_no']] = temp
 
+filecount = len(glob.glob('gages_historic/*_historic.dat'))
 
-
-for fname in glob.glob('gages_historic/*_historic.dat'):
-  print ("Working on %s" % (fname))
+for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
+  print ("Working on '%s' (%d of %d)" % (fname,i+1,filecount))
   fin = open(fname,'r')
   fin = csv.DictReader((row for row in fin if not row.startswith('#')),dialect='excel-tab',delimiter='\t',skipinitialspace=True)
   fin.next() #Skip units line
