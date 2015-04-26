@@ -56,7 +56,7 @@ WITH new_values (site_code,dvalue,svalue,drank,jday) AS (
 ),
 upsert AS
 (
-    UPDATE reach_summary m
+    UPDATE gauge_summary m
         SET dvalue = GREATEST(m.dvalue,nv.dvalue),
             svalue = GREATEST(m.svalue,nv.svalue),
             drank  = GREATEST(m.drank, nv.drank )
@@ -64,7 +64,7 @@ upsert AS
     WHERE m.site_code = nv.site_code AND m.jday=nv.jday
     RETURNING m.*
 )
-INSERT INTO reach_summary (site_code,dvalue,svalue,drank,jday)
+INSERT INTO gauge_summary (site_code,dvalue,svalue,drank,jday)
 SELECT site_code,dvalue,svalue,drank,jday
 FROM new_values
 WHERE NOT EXISTS (SELECT 1
