@@ -35,14 +35,17 @@ def show_reachflow(date):
 
 @app.route('/gauges/getvals/<string:date>', methods=['POST'])
 def show_getvals(date):
-  cur         = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
-  gaugelist   = json.loads(request.form['gauages'])
-  non_decimal = re.compile(r'[^\d]+')
-  gaugelist   = filter(lambda x: non_decimal.match(x), gaugelist)
-  gaugelist   = map(lambda x: "'"+x+"'", gaugelist)
-  gaugelist   = ','.join(gaugelist)
+  cur       = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
+  gaugelist = request.form['gauges']
+  gaugelist = json.loads(gaugelist)
+  print(type(gaugelist))
   print(gaugelist)
-  cur.execute("SELECT * FROM gauge_summary WHERE site_code IN ("+gaugelist+") AND jday=%(date)s::date-'1970-01-01'::date")
+  decimal   = re.compile(r'[\d]+')
+  gaugelist = list(filter(lambda x: decimal.match(x), gaugelist))
+  print(gaugelist)
+  gaugelist = map(lambda x: "'"+x+"'", gaugelist)
+  gaugelist = ','.join(gaugelist)
+  cur.execute("SELECT * FROM gauge_summary WHERE site_code IN ("+gaugelist+") AND jday=%(date)s::date-'1970-01-01'::date", {"date":date})
   return json.dumps({"gaugevals":cur.fetchall()})
 
 @app.route('/gauges/list/<string:xmin>/<string:ymin>/<string:xmax>/<string:ymax>', methods=['GET'])
