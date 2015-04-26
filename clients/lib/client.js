@@ -38,7 +38,7 @@ var requestsPool = {
   requests: {}, //list of urls
   timeouts: {},
   timeout:  1000*60*10, //In milliseconds
-  fetch: function(url, data) {
+  fetch: function(url, data, sendtype) {
     if(requestsPool.exists(url))
       return requestsPool.requests[url];
 
@@ -46,9 +46,12 @@ var requestsPool = {
         requestsPool.remove(u);
     }.bind(this, url), requestsPool.timeout); //Defining the timeout
 
-    if(data)
-      requestsPool.requests[url] = $.getJSON(url,data);
-    else
+    if(data){
+      if(sendtype=='post')
+        requestsPool.requests[url] = $.post(url,data,null,'json');
+      else
+        requestsPool.requests[url] = $.getJSON(url,data);
+    } else
       requestsPool.requests[url] = $.getJSON(url);
     return requestsPool.requests[url];
   },
@@ -80,7 +83,7 @@ function UpdateRivers(newtime){
 }
 
 function UpdateGauges(newtime){
-  requestsPool.fetch('/gauges/getvals/'+newtime,{gauges:JSON.stringify(gauge_list)})
+  requestsPool.fetch('/gauges/getvals/'+newtime,{gauges:JSON.stringify(gauge_list)},'post')
   .done(function(val){
     console.log(val);
     /*_.each(val['reachflows'],function(o){
@@ -89,6 +92,7 @@ function UpdateGauges(newtime){
     });*/
   });
 }
+UpdateGauges('2010-08-08');
 
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
