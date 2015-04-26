@@ -69,7 +69,7 @@ FROM (SELECT source_fea AS site_code, ST_X(geom) as lng, ST_Y(geom) as lat, feat
           900913
         )
         ORDER BY random() LIMIT 500) AS geo
-NATURAL JOIN gauge_summary gs WHERE gs.jday=%(date)s::date-'1970-01-01'::date
+NATURAL JOIN gauge_summary gs WHERE gs.jday=%(date)s::date-'1970-01-01'::date ORDER BY site_code
   """, {"date":date,"xmin":xmin,"ymin":ymin,"xmax":xmax,"ymax":ymax})
 
   return json.dumps(cur.fetchall())
