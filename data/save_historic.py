@@ -58,10 +58,10 @@ for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
       i['svalue'] = None
 
   try:
-    cur.executemany("""INSERT INTO gauge_summary (site_code,dvalue,svalue,drank,jday) VALUES (%(site_no)s, CAST(%(dvalue)s AS REAL), CAST(%(svalue)s AS REAL), CAST(%(drank)s AS REAL), %(datetime)s::date-'1970-01-01'::date)""")
-  except:
-    print("Failed to insert for %s" % (fname))
+    cur.executemany("""INSERT INTO gauge_summary (site_code,dvalue,svalue,drank,jday) VALUES (%(site_no)s, CAST(%(dvalue)s AS REAL), CAST(%(svalue)s AS REAL), CAST(%(drank)s AS REAL), %(datetime)s::date-'1970-01-01'::date)""", data)
+  except psycopg2.IntegrityError:
     conn.rollback()
+    print("Duplicate key for %s" % (fname))
     continue
-
-  conn.commit()
+  else:
+    conn.commit()
