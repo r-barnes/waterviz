@@ -190,7 +190,7 @@ FROM new_values
 WHERE NOT EXISTS (SELECT 1
                   FROM upsert up
                   WHERE up.site_code = new_values.site_code AND up.jday = new_values.jday)
-""", agg_reach_data)
+""", agg_gauge_data)
 
 
 
