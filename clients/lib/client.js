@@ -351,6 +351,7 @@ var hurricane_tracks_raw = [];
 function timeChanged(newtime){
   UpdateHurricanes(newtime);
   UpdateRivers(newtime);
+  getStations();
 }
 
 $(document).ready(function(){
