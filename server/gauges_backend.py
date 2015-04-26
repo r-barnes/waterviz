@@ -86,12 +86,14 @@ gauges_to_huc8 = {}
 for gauge in cur.fetchall():
   gauges_to_huc8[gauge['gaugecode']] = gauge['reachcode'][0:8]
 
-agg_data = {}
+agg_reach_data = {}
+agg_gauge_data = {}
 
+#See: http://waterservices.usgs.gov/rest/IV-Service.html#Multiple for API info
 def getData(state):
   print("Gathering data for %s" % (state))
   url     = "http://waterservices.usgs.gov/nwis/iv/"
-  options = {"format":"json","stateCd":state,"parameterCd":"00060,00065","siteStatus":"active"}
+  options = {"format":"json","stateCd":state,"parameterCd":"00060,00065","siteStatus":"active","startDT":'2011-04-28','endDT':'2011-04-28'}
   resp    = requests.get(url,params=options)
   if resp.status_code!=200:
     pass
@@ -111,7 +113,7 @@ def getData(state):
       variable_code = s['variable']['variableCode'][0]['value']
       #variable_code = translate_variable_code[variable_code]
       timestamp     = s['values'][0]['value'][0]['dateTime']
-      value         = float(s['values'][0]['value'][0]['value'])
+      value         = max([float(x['value']) for x in s['values'][0]['value']])
 
       if not site_code in gauges_to_huc8:
         sys.stderr.write("No reach found for %s\n" % (site_code))
@@ -119,15 +121,22 @@ def getData(state):
         continue
       reach_code = gauges_to_huc8[site_code]
 
-      if not reach_code in agg_data:
-        agg_data[reach_code] = {'huc8':reach_code,'dvalue':[],'svalue':[],'drank':[]}
-      this_ad = agg_data[reach_code]
+      if not site_code in agg_gauge_data:
+        agg_gauge_data[site_code] = {'site_code':site_code,'dvalue':None,'svalue':None,'drank':None}
+      if not reach_code in agg_reach_data:
+        agg_reach_data[reach_code] = {'huc8':reach_code,'dvalue':[],'svalue':[],'drank':[]}
+
+      reach_obj = agg_reach_data[reach_code]
+      gauge_obj = agg_gauge_data[site_code]
       if variable_code=='00065': #Stage
-        this_ad['svalue'].append(value)
+        reach_obj['svalue'].append(value)
+        gauge_obj['svalue'] = value
       elif variable_code=='00060': #Discharge
-        this_ad['dvalue'].append(value)
+        reach_obj['dvalue'].append(value)
+        gauge_obj['dvalue'] = value
         if site_code in historic_data:
-          this_ad['drank'].append(scipy.stats.percentileofscore(historic_data[site_code],value))
+          gauge_obj['drank'] = scipy.stats.percentileofscore(historic_data[site_code],value)
+          reach_obj['drank'].append(gauge_obj['drank'])
     except:
       pass
 
@@ -138,7 +147,7 @@ def getData(state):
 for state in states:
   data = getData(state['abbrev'])
 
-for k,v in agg_data.iteritems():
+for k,v in agg_reach_data.iteritems():
   if len(v['svalue'])>0:
     v['svalue'] = np.average(v['svalue'])
   else:
@@ -154,12 +163,51 @@ for k,v in agg_data.iteritems():
   else:
     v['drank'] = None
 
+cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM gauge_summary WITH NO DATA")
+#cur.execute("CREATE TABLE tmp   AS SELECT * FROM gauge_data with no data")
+#cur.executemany("""INSERT INTO tmp(huc8,dvalue,svalue,drank,jday) VALUES (%(huc8)s, %(dvalue)s, %(svalue)s, %(drank)s, now()::date-'1970-01-01'::date)""", agg_reach_data)
+
+#Convert agg_reach_data into a list suitable for mass insertion into the db
+agg_reach_data = [v for k,v in agg_reach_data.iteritems()]
+
+cur.executemany("""
+WITH new_values (site_code,dvalue,svalue,drank,jday) AS (
+  VALUES (%(site_code)s, CAST(%(dvalue)s AS REAL), CAST(%(svalue)s AS REAL), CAST(%(drank)s AS REAL), now()::date-'1970-01-01'::date)
+),
+upsert AS
+(
+    UPDATE gauge_summary m
+        SET dvalue = GREATEST(m.dvalue,nv.dvalue),
+            svalue = GREATEST(m.svalue,nv.svalue),
+            drank  = GREATEST(m.drank, nv.drank )
+    FROM new_values nv
+    WHERE m.site_code = nv.site_code AND m.jday=nv.jday
+    RETURNING m.*
+)
+INSERT INTO gauge_summary (site_code,dvalue,svalue,drank,jday)
+SELECT site_code,dvalue,svalue,drank,jday
+FROM new_values
+WHERE NOT EXISTS (SELECT 1
+                  FROM upsert up
+                  WHERE up.site_code = new_values.site_code AND up.jday = new_values.jday)
+""", agg_reach_data)
+
+
+
+
+
+
+
+
+
+
+
 cur.execute("CREATE TEMP TABLE tmp ON COMMIT DROP AS SELECT * FROM reach_summary WITH NO DATA")
 #cur.execute("CREATE TABLE tmp   AS SELECT * FROM gauge_data with no data")
-#cur.executemany("""INSERT INTO tmp(huc8,dvalue,svalue,drank,jday) VALUES (%(huc8)s, %(dvalue)s, %(svalue)s, %(drank)s, now()::date-'1970-01-01'::date)""", agg_data)
+#cur.executemany("""INSERT INTO tmp(huc8,dvalue,svalue,drank,jday) VALUES (%(huc8)s, %(dvalue)s, %(svalue)s, %(drank)s, now()::date-'1970-01-01'::date)""", agg_reach_data)
 
-#Convert agg_data into a list suitable for mass insertion into the db
-agg_data = [v for k,v in agg_data.iteritems()]
+#Convert agg_reach_data into a list suitable for mass insertion into the db
+agg_reach_data = [v for k,v in agg_reach_data.iteritems()]
 
 cur.executemany("""
 WITH new_values (huc8,dvalue,svalue,drank,jday) AS (
@@ -181,6 +229,7 @@ FROM new_values
 WHERE NOT EXISTS (SELECT 1
                   FROM upsert up
                   WHERE up.huc8 = new_values.huc8 AND up.jday = new_values.jday)
-""", agg_data)
+""", agg_reach_data)
+
 
 conn.commit()
