@@ -30,7 +30,7 @@ def teardown_request(exception):
 def show_reachflow(date):
   cur = g.db.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
   cur.execute("SELECT * FROM reach_summary WHERE jday=%(date)s::date-'1970-01-01'::date", {"date":date})
-  return json.dumps(cur.fetchall())
+  return json.dumps({"reachflows":cur.fetchall()})
 
 
 
