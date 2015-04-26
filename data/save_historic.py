@@ -52,7 +52,7 @@ for i,fname in enumerate(glob.glob('gages_historic/*_historic.dat')):
 
   cur.executemany("""
 WITH new_values (site_code,dvalue,svalue,drank,jday) AS (
-  VALUES (%(site_code)s, CAST(%(dvalue)s AS REAL), CAST(%(svalue)s AS REAL), CAST(%(drank)s AS REAL), %(datetime)s::date-'1970-01-01'::date)
+  VALUES (%(site_no)s, CAST(%(dvalue)s AS REAL), CAST(%(svalue)s AS REAL), CAST(%(drank)s AS REAL), %(datetime)s::date-'1970-01-01'::date)
 ),
 upsert AS
 (
