@@ -66,17 +66,16 @@ var requestsPool = {
 
 
 
-var riverinfo = {};
-
-// function StyleTheRivers(feature){
-//   requestsPool.fetch('/gauges/reachflow/'+feature.properties.huc8)
-//   .done(function(val){
-//     riverinfo[feature.properties.huc8]=val;
-//     $('.h'+feature.properties.huc8).css('stroke', (val.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*val.drank)]:'#FF00DE' );
-//     $('.h'+feature.properties.huc8).css('stroke-width', ((val.drank!==null)?(6*val.drank+2).toString():'2')+'px' );
-//   });
-// }
-//$.getJSON('/gauges/reachflow/'+feature.properties.huc8, function(data){
+function UpdateRivers(newtime){
+  requestsPool.fetch('/gauges/reachflow/'+newtime)
+  .done(function(val){
+    console.log(val);
+    _.each(val['reachflows'],function(o){
+      $('.h'+o.huc8).css('stroke',       (o.drank!==null)?grad_colours[Math.floor((grad_colours.length-1)*o.drank/100.0)]:'#FF00DE' );
+      $('.h'+o.huc8).css('stroke-width', ((o.drank!==null)?(6*o.drank/100.0+2).toString():'2')+'px' );
+    });
+  });
+}
 
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
@@ -86,7 +85,6 @@ function riverStyle(feature) {
 }
 
 function riverClass(feature){
-//  StyleTheRivers(feature);
   return "river h" + feature.properties.huc8;
 }
 
@@ -251,11 +249,10 @@ $('.nlcdgrad').hover(function(e){
   $('#nlcdexplanation').html('NLCD Legend (hover over colours for details)');
 });
 
-var hurricanes           = {};
-var hurricane_points_raw = [];
-var hurricane_tracks_raw = [];
-//TODO: Prevent multiple calls to hurricanes for the same date
-function timeChanged(newtime){
+
+
+
+function UpdateHurricanes(newtime){
   var newtimeunix = moment(newtime,'YYYY-MM-DD').unix();
   requestsPool.fetch('/hurricanes/'+newtime) //Prevent multiple calls to server in same session
   .done(function(data){
@@ -327,6 +324,17 @@ function timeChanged(newtime){
       }
     });
   });
+}
+
+
+
+var hurricanes           = {};
+var hurricane_points_raw = [];
+var hurricane_tracks_raw = [];
+//TODO: Prevent multiple calls to hurricanes for the same date
+function timeChanged(newtime){
+  UpdateHurricanes(newtime);
+  UpdateRivers(newtime);
 }
 
 $(document).ready(function(){
