@@ -13,6 +13,8 @@ app = Flask(__name__)
 aggregated_stats_file = 'county_agg_stats.p'
 aggdata               = pickle.load(open(aggregated_stats_file, "rb"))
 
+making random changes
+
 @app.before_request
 def before_request():
   g.db = psycopg2.connect("dbname='rivers' user='nelson' host='localhost' password='NONE'")
